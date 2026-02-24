@@ -6,10 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
-  @media (orientation: portrait) {
-    .rotate-msg { display: flex !important; }
-    .app { display: none !important; }
-  }
+  /* portrait mode supported */
 
 
 /* Table view */
@@ -172,8 +169,7 @@
 }
 
 html, body {
-  width: 100%; height: 100%;
-  overflow: hidden;
+  width: 100%;
   background: var(--bg);
   color: var(--text);
   font-family: 'IBM Plex Mono', monospace;
@@ -186,18 +182,128 @@ html, body {
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+}
+
+@media (orientation: portrait) {
+  /* Full screen app, no scroll */
+  html, body { overflow: hidden; height: 100%; }
+
+  .app {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* TOP BAR - compact */
+  .topbar {
+    padding: 8px 12px 4px;
+    flex-shrink: 0;
+  }
+
+  .score-pill {
+    gap: 6px;
+    padding: 4px 10px;
+  }
+
+  .score-num { font-size: 18px; }
+  .score-dot { width: 7px; height: 7px; }
+  .turn-pill { font-size: 9px; padding: 3px 7px; }
+
+  /* PATH BAR */
+  .path-bar {
+    font-size: 9px;
+    padding: 2px 12px;
+  }
+
+  /* BOARD WRAP - takes all available space */
+  .board-wrap {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4px 8px;
+  }
+
+  .board {
+    padding: 10px 8px;
+    border-radius: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* PITS - responsive size */
+  .pits-row {
+    gap: 4px;
+    margin: 2px 0;
+  }
+
+  .pit {
+    transform: scale(0.95);
+  }
+
+  .pit .pit-v { font-size: clamp(22px, 7.5vw, 42px); }
+  .pit .pit-n { font-size: 8px; }
+
+  /* MIDDLE ROW */
+  .middle-row {
+    margin: 4px 0;
+    gap: 6px;
+  }
+
+  .store {
+    width: clamp(44px, 11vw, 64px);
+    height: clamp(44px, 11vw, 64px);
+  }
+
+  .store .pit-v { font-size: clamp(22px, 6vw, 34px); }
+
+  /* BOTTOM BAR */
+  .bottombar {
+    flex-shrink: 0;
+    padding: 6px 10px env(safe-area-inset-bottom, 8px);
+    gap: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .action-btn {
+    height: 44px;
+    font-size: 12px;
+    border-radius: 12px;
+    flex: 1;
+  }
+
+  .btn-save, .btn-tree {
+    flex: 0 0 44px;
+    width: 44px;
+    padding: 0;
+    font-size: 18px;
+  }
+
+  /* SIDE COL - hidden in portrait */
+  .side-col { display: none !important; }
+
+  /* TURN COMPACT - hidden in portrait */
+  .turn-compact { display: none !important; }
+
+  /* SCORES - show in portrait */
+  .scores { display: flex; }
 }
 
 @media (orientation: landscape) {
-  .app { flex-direction: row; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  html, body { height: auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .app { flex-direction: row; min-height: 100vh; align-items: stretch; }
 
   .main-col {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    overflow: visible;
   }
 
   /* Hide EVERYTHING except board and side panel */
@@ -214,24 +320,23 @@ html, body {
   .board-wrap { 
     flex: 1;
     min-width: 0;
-    padding: 2px 4px 0;
-    justify-content: center;
+    padding: 4px 6px;
     display: flex;
     flex-direction: column;
-    overflow: visible;
+    justify-content: center;
   }
 
   .board { padding: 6px 6px 4px; width: 100%; box-sizing: border-box; }
 
   /* Compact board */
-  .pits-row { gap: 3px; }
-  .pit { border-width: 1.5px; }
-  .pit .pit-v { font-size: clamp(16px, 4vw, 28px); }
+  .pits-row { gap: 0; margin: 0; }
+  .pit { border-width: 1.5px; margin: 0 -2px; }
+  .pit .pit-v { font-size: clamp(28px, 7vw, 48px); }
   .pit .pit-n { font-size: 7px; }
 
   .middle-row { margin: 3px 0; gap: 4px; }
-  .store { width: 7vh; height: 7vh; min-width: 44px; max-width: 62px; }
-  .store .pit-v { font-size: 20px; }
+  .store { width: 11vh; height: 11vh; min-width: 54px; max-width: 80px; }
+  .store .pit-v { font-size: clamp(24px, 5vh, 36px); }
   .store .pit-n { font-size: 8px; }
 
   /* Score shown inside store - hide separate score */
@@ -240,6 +345,7 @@ html, body {
   /* Side buttons */
   .side-col {
     width: 46px;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -248,6 +354,7 @@ html, body {
     padding: 8px 0;
     border-left: 1px solid var(--border);
     background: var(--bg2);
+    align-self: stretch;
   }
 
   .side-btn {
@@ -805,7 +912,7 @@ html, body {
 
 <!-- Main app -->
 <!-- Rotate message -->
-<div class="rotate-msg" style="display:none;position:fixed;inset:0;background:#0A0A0E;z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+<div class="rotate-msg" style="display:none !important;position:fixed;inset:0;background:#0A0A0E;z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:16px">
   <div style="font-size:48px">↩</div>
   <div style="font-family:'Syne',sans-serif;font-size:18px;color:#E8C05A;letter-spacing:2px">ROTATE PHONE</div>
   <div style="font-size:12px;color:#5A5A78;letter-spacing:1px">landscape mode</div>
@@ -886,6 +993,7 @@ html, body {
     <button class="action-btn btn-undo" onclick="forwardMove()">→ FWD</button>
     <button class="action-btn btn-tree" onclick="openPanel('tree')">🌿</button>
     <button class="action-btn btn-save" onclick="openPanel('save')">💾</button>
+    <button class="action-btn btn-save" onclick="openDebutTree()">📖</button>
   </div>
   </div><!-- end main-col -->
 
