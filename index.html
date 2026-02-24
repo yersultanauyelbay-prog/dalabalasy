@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
@@ -226,7 +226,7 @@ html, body {
   .pit .pit-n { font-size: 7px; }
 
   .middle-row { margin: 5px 0; }
-  .store { width: 46px; height: 46px; }
+  .store { width: 51px; height: 51px; }
   .store .pit-v { font-size: 20px; }
   .store .pit-n { font-size: 8px; }
 
@@ -391,9 +391,10 @@ html, body {
   border: 2px solid transparent;
   transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
   -webkit-tap-highlight-color: transparent;
+  transform: scale(0.9);
 }
 
-.pit:active { transform: scale(0.92) !important; }
+.pit:active { transform: scale(0.83) !important; }
 
 .pit-n { font-size: 9px; color: var(--muted); line-height:1; margin-bottom:2px; }
 
@@ -407,12 +408,12 @@ html, body {
 /* P0 pits */
 .pit.p0 { background: radial-gradient(circle at 40% 35%, #0D1825, #070E18); border-color: rgba(91,163,255,0.12); }
 .pit.p0 .pit-v { color: var(--blue); }
-.pit.p0.active { border-color: var(--blue); box-shadow: 0 0 18px rgba(91,163,255,0.35); transform: scale(1.06); }
+.pit.p0.active { border-color: var(--blue); box-shadow: 0 0 18px rgba(91,163,255,0.35); transform: scale(0.96); }
 
 /* P1 pits */
 .pit.p1 { background: radial-gradient(circle at 40% 35%, #1C1508, #110D04); border-color: rgba(232,192,90,0.12); }
 .pit.p1 .pit-v { color: var(--gold); }
-.pit.p1.active { border-color: var(--gold); box-shadow: 0 0 18px rgba(232,192,90,0.35); transform: scale(1.06); }
+.pit.p1.active { border-color: var(--gold); box-shadow: 0 0 18px rgba(232,192,90,0.35); transform: scale(0.96); }
 
 .pit.empty { opacity: 0.3; }
 .pit.disabled { cursor: default; }
@@ -428,7 +429,7 @@ html, body {
 }
 
 .store {
-  width: 56px;
+  width: 62px;
   flex-shrink: 0;
   aspect-ratio: 1;
   border-radius: 50%;
@@ -1077,6 +1078,12 @@ function winner(b){
 // ============================================================
 // GAME ACTIONS
 // ============================================================
+function confirmNewGame(){
+  if(confirm('Начать новую игру? Несохранённые данные будут потеряны.')){
+    newGame();
+  }
+}
+
 function newGame(){
   frozenTreeRows = null;
   let b=Array(14).fill(4);b[6]=0;b[13]=0;
