@@ -297,7 +297,7 @@ html, body {
 
 @media (orientation: landscape) {
   html, body { height: auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-  .app { flex-direction: row; min-height: 100vh; align-items: stretch; }
+  .app { flex-direction: row; min-height: 100vh; align-items: stretch; padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
 
   .main-col {
     flex: 1;
@@ -335,7 +335,7 @@ html, body {
   .pit .pit-n { font-size: 7px; }
 
   .middle-row { margin: 3px 0; gap: 4px; }
-  .store { width: 9vh; height: 9vh; min-width: 54px; max-width: 80px; }
+  .store { width: 11vh; height: 11vh; min-width: 54px; max-width: 80px; }
   .store .pit-v { font-size: clamp(24px, 5vh, 36px); }
   .store .pit-n { font-size: 8px; }
 
@@ -370,7 +370,7 @@ html, body {
     transition: all 0.15s;
     color: var(--muted);
   }
-  .side-btn:active { transform: scale(0.8); background: var(--bg3); }
+  .side-btn:active { transform: scale(0.9); background: var(--bg3); }
   .side-btn.gold { color: var(--gold); border-color: rgba(232,192,90,0.25); background: rgba(232,192,90,0.08); }
   .side-btn.blue { color: var(--blue); border-color: rgba(91,163,255,0.25); background: rgba(91,163,255,0.08); }
   .side-btn.green { color: var(--green); border-color: rgba(61,219,133,0.25); background: rgba(61,219,133,0.08); }
@@ -650,6 +650,9 @@ html, body {
   transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
   max-height: 80vh;
   overflow-y: auto;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .panel.show { transform: translateY(0); }
@@ -665,12 +668,12 @@ html, body {
   font-family: 'Syne', sans-serif;
   font-size: 16px;
   font-weight: 800;
-  padding: 14px 20px 10px;
+  padding: 14px max(20px, env(safe-area-inset-left, 20px)) 10px;
   color: var(--text);
   letter-spacing: 1px;
 }
 
-.panel-body { padding: 0 16px 32px; }
+.panel-body { padding: 0 max(16px, env(safe-area-inset-left, 16px)) 32px max(16px, env(safe-area-inset-left, 16px)); }
 
 /* Menu items */
 .menu-item {
