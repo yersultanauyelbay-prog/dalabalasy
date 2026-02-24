@@ -191,13 +191,13 @@ html, body {
 }
 
 @media (orientation: landscape) {
-  .app { flex-direction: row; }
+  .app { flex-direction: row; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
   .main-col {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: visible;
   }
 
   /* Hide EVERYTHING except board and side panel */
@@ -218,7 +218,7 @@ html, body {
     justify-content: center;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .board { padding: 6px 6px 4px; width: 100%; box-sizing: border-box; }
