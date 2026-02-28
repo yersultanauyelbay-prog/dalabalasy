@@ -185,8 +185,8 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
 .pill-btn.del  { background:rgba(255,92,92,0.1);  color:var(--red);  border-color:rgba(255,92,92,0.25); }
 .game-table { width:100%; border-collapse:collapse; font-family:'IBM Plex Mono',monospace; font-size:13px; }
 .game-table th { text-align:left; padding:6px 10px; font-size:10px; letter-spacing:2px; color:var(--muted); border-bottom:1px solid var(--border); }
-.game-table th.p0h { color:var(--blue); }
-.game-table th.p1h { color:var(--gold); }
+.game-table th.p0h { color:var(--text); }
+.game-table th.p1h { color:var(--muted); }
 .game-table td { padding:7px 10px; border-bottom:1px solid rgba(36,36,46,0.6); vertical-align:top; cursor:pointer; }
 .game-table td:active { opacity:0.7; }
 .game-table tr:last-child td { border-bottom:none; }
@@ -391,7 +391,7 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
 <!-- DEBUT TREE OVERLAY -->
 <div id="dt-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;font-family:'IBM Plex Mono',monospace">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);flex-shrink:0">
-    <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--gold);letter-spacing:2px">DEBUT TREE</div>
+    <div id="dt-title" style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--gold);letter-spacing:2px">DEBUT TREE</div>
     <div style="display:flex;gap:8px;align-items:center">
       <button onclick="dtZoom(-1)" style="width:30px;height:30px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:16px;font-weight:700;cursor:pointer">−</button>
       <span id="dt-zoom-lbl" style="font-size:11px;color:var(--muted);min-width:36px;text-align:center">100%</span>
@@ -399,18 +399,35 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
       <button onclick="closeDebutTree()" style="width:30px;height:30px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:14px;cursor:pointer">✕</button>
     </div>
   </div>
-  <div id="dt-pit-select" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+  <div id="dt-pit-select" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:relative;z-index:1">
     <div style="font-size:11px;color:var(--muted);letter-spacing:2px">SELECT OPENING MOVE</div>
     <div style="display:flex;gap:12px">
-      <div onclick="dtSelectPit(6)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);cursor:pointer">6</div>
-      <div onclick="dtSelectPit(5)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);cursor:pointer">5</div>
-      <div onclick="dtSelectPit(4)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);cursor:pointer">4</div>
-      <div onclick="dtSelectPit(3)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);cursor:pointer">3</div>
-      <div onclick="dtSelectPit(2)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);cursor:pointer">2</div>
-      <div onclick="dtSelectPit(1)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);cursor:pointer">1</div>
+      <div onclick="dtSelectPit(6)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);cursor:pointer">6</div>
+      <div onclick="dtSelectPit(5)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);cursor:pointer">5</div>
+      <div onclick="dtSelectPit(4)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);cursor:pointer">4</div>
+      <div onclick="dtSelectPit(3)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);cursor:pointer">3</div>
+      <div onclick="dtSelectPit(2)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);cursor:pointer">2</div>
+      <div onclick="dtSelectPit(1)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);cursor:pointer">1</div>
     </div>
+    <div onclick="dtShowRoot()" style="margin-top:8px;padding:10px 28px;border-radius:12px;background:var(--bg3);border:2px solid var(--green);font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--green);letter-spacing:2px;cursor:pointer">КОРЕНЬ</div>
+  </div>
+  <!-- ROOT pit select -->
+  <div id="dt-root-select" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:relative;z-index:1">
+    <div style="font-size:11px;color:var(--muted);letter-spacing:2px">КОРЕНЬ — ВЫБЕРИ ХОД</div>
+    <div style="display:flex;gap:12px">
+      <div onclick="dtBuildRoot(6)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green);cursor:pointer">6</div>
+      <div onclick="dtBuildRoot(5)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green);cursor:pointer">5</div>
+      <div onclick="dtBuildRoot(4)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green);cursor:pointer">4</div>
+      <div onclick="dtBuildRoot(3)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green);cursor:pointer">3</div>
+      <div onclick="dtBuildRoot(2)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green);cursor:pointer">2</div>
+      <div onclick="dtBuildRoot(1)" style="width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green);cursor:pointer">1</div>
+    </div>
+    <div onclick="dtBackToMain()" style="margin-top:8px;padding:8px 20px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);font-family:'Syne',sans-serif;font-size:12px;color:var(--muted);cursor:pointer">← НАЗАД</div>
   </div>
   <div id="dt-table-area" style="display:none;flex:1;overflow:auto;-webkit-overflow-scrolling:touch">
+    <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0">
+      <span id="dt-back-btn" onclick="dtGoBack()" style="font-family:'Syne',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;letter-spacing:1px">← НАЗАД</span>
+    </div>
     <table id="dt-table" style="border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:12px;min-width:100%"></table>
   </div>
 </div>
@@ -486,12 +503,29 @@ function winner(b){
 // ============================================================
 function newGame(){
   frozenTreeRows = null;
+  sidesSwapped = false;
   let b=Array(14).fill(4);b[6]=0;b[13]=0;
   nodeId=0;
   root=mkNode(b,0,null,null,false,0);
   cur=root;
   document.getElementById('win-overlay').classList.remove('show');
   render();
+}
+
+// Смена кто начинает — только на первом ходу
+let sidesSwapped = false;
+function swapSides(startPlayer){
+  sidesSwapped = (startPlayer === 1);
+  let b=Array(14).fill(4);b[6]=0;b[13]=0;
+  nodeId=0;
+  root=mkNode(b, startPlayer, null,null,false,0);
+  cur=root;
+  render();
+  let msg = document.createElement('div');
+  msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);color:#fff;font-family:Syne,sans-serif;font-size:16px;font-weight:800;padding:16px 28px;border-radius:14px;z-index:999;letter-spacing:1px;pointer-events:none';
+  msg.textContent = startPlayer===0 ? '🔵 Синий ходит первым' : '🟡 Золотой ходит первым';
+  document.body.appendChild(msg);
+  setTimeout(()=>msg.remove(), 1500);
 }
 
 function forwardMove(){ if(!cur||cur.children.length===0)return; cur=cur.children[0]; render(); }
@@ -527,7 +561,7 @@ function drawBalls(area, count, color, markLast) {
   area.innerHTML = '';
   const W = area.offsetWidth || 70;
   const H = area.offsetHeight || 110;
-  const D = 22, G = 4, S = D + G;
+  const D = 20, G = 4, S = D + G;
   const cx = W/2;
   const x0 = cx - S/2 - D/2;
   const x1 = cx + S/2 - D/2;
@@ -599,10 +633,14 @@ function updateKazan(elId, gridId, numId, count, color) {
 function renderBoard(){
   let b=cur.board, p=cur.player, t=terminal(b);
 
-  document.getElementById('s0').textContent=b[6];
-  document.getElementById('s1').textContent=b[13];
-  let sb0=document.getElementById('s0b'); if(sb0) sb0.textContent=b[6];
-  let sb1=document.getElementById('s1b'); if(sb1) sb1.textContent=b[13];
+  // Счёт: первым всегда тот кто начинал
+  let first = root.player; // 0=синий первый, 1=золотой первый
+  let scoreFirst = first===0 ? b[6] : b[13];
+  let scoreSecond = first===0 ? b[13] : b[6];
+  document.getElementById('s0').textContent = scoreFirst;
+  document.getElementById('s1').textContent = scoreSecond;
+  let sb0=document.getElementById('s0b'); if(sb0) sb0.textContent=scoreFirst;
+  let sb1=document.getElementById('s1b'); if(sb1) sb1.textContent=scoreSecond;
   let t2=document.getElementById('turn2');
   if(t2){t2.textContent=t?'DONE':p===0?'P1 TURN':'P2 TURN'; t2.style.color=t?'var(--green)':p===0?'var(--blue)':'var(--gold)';}
   let turn=document.getElementById('turn');
@@ -623,34 +661,42 @@ function renderBoard(){
   document.getElementById('kazan1').classList.toggle('mg-last', lp === 13);
   document.getElementById('kazan0').classList.toggle('mg-last', lp === 6);
 
-  // ── P1 ряд (верхний, золотые лунки): 12→7 ──
+  // ── P1 ряд (верхний): 12→7 ──
   let r1 = document.getElementById('row1'); r1.innerHTML='';
   let areas1 = [];
+  let color1 = 'gold', color0 = 'blue';
+  let cls1 = 'mg-pit-gold', cls0 = 'mg-pit-blue';
   for(let i=12; i>=7; i--) {
     let can = !t && p===1 && b[i]>0;
     let el = document.createElement('div');
-    el.className = `mg-pit mg-pit-gold${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
+    el.className = `mg-pit ${cls1}${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
     if(can) el.onclick = (()=>{ let pit=i; return ()=>pitClick(pit); })();
+    if(cur === root) {
+      el.ondblclick = (e)=>{ e.stopPropagation(); swapSides(1); };
+    }
     let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
     let area = document.createElement('div'); area.className='mg-dot-area';
     el.appendChild(num); el.appendChild(area);
     r1.appendChild(el);
-    areas1.push({area, count:b[i], color:'gold', pit:i});
+    areas1.push({area, count:b[i], color:color1, pit:i});
   }
 
-  // ── P0 ряд (нижний, синие лунки): 0→5 ──
+  // ── P0 ряд (нижний): 0→5 ──
   let r0 = document.getElementById('row0'); r0.innerHTML='';
   let areas0 = [];
   for(let i=0; i<6; i++) {
     let can = !t && p===0 && b[i]>0;
     let el = document.createElement('div');
-    el.className = `mg-pit mg-pit-blue${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
+    el.className = `mg-pit ${cls0}${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
     if(can) el.onclick = (()=>{ let pit=i; return ()=>pitClick(pit); })();
+    if(cur === root) {
+      el.ondblclick = (e)=>{ e.stopPropagation(); swapSides(0); };
+    }
     let area = document.createElement('div'); area.className='mg-dot-area';
     let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
     el.appendChild(area); el.appendChild(num);
     r0.appendChild(el);
-    areas0.push({area, count:b[i], color:'blue', pit:i});
+    areas0.push({area, count:b[i], color:color0, pit:i});
   }
 
   // ── Рисуем шарики после layout ──
@@ -690,48 +736,91 @@ function getMoveLabel(node) {
   if (node.lastPos === 6 || node.lastPos === 13) { to = 'M'; }
   else if (node.lastPos >= 7 && node.lastPos <= 12) { to = node.lastPos - 6; }
   else { to = node.lastPos + 1; }
-  return { from, to, player: pp, extra: node.extra, cap: node.cap, done: node.done, node };
+  // isFirst: этот ход сделан первым игроком (тем кто начал)
+  let isFirst = pp === root.player;
+  return { from, to, player: pp, isFirst, extra: node.extra, cap: node.cap, done: node.done, node };
 }
 
-function buildMoveRows(root) {
-  let rows = [], rowNum = 1;
-  let path = []; let n = cur;
+function buildMoveRows(rootNode) {
+  let sp = rootNode.player; // кто начал
+  let rows = [];
+  let rowNum = 1;
+
+  let path = [];
+  let n = cur;
   while (n && n.parent) { path.unshift(n); n = n.parent; }
+
   let i = 0;
   while (i < path.length) {
     let node = path[i];
     let pp = node.parent.player;
+    let isFirst = pp === sp;
     let row = { num: rowNum++, p0: [], p1: [], p0nodes: [], p1nodes: [], alts0: [], alts1: [] };
-    if (pp === 0) {
-      while (i < path.length && path[i].parent.player === 0) {
-        let l = getMoveLabel(path[i]); if (l) { row.p0.push(l); row.p0nodes.push(path[i]); let sibs = path[i].parent.children.filter(c => c !== path[i]); sibs.forEach(s => { let sl = getMoveLabel(s); if(sl) row.alts0.push({label:sl, node:s}); }); }
-        if (!path[i].extra) { i++; break; } i++;
+
+    if (isFirst) {
+      // Collect first player chain
+      while (i < path.length && path[i].parent.player === sp) {
+        let l = getMoveLabel(path[i]);
+        if (l) { row.p0.push(l); row.p0nodes.push(path[i]); }
+        let sibs = path[i].parent.children.filter(c => c !== path[i]);
+        sibs.forEach(s => { let sl = getMoveLabel(s); if(sl) row.alts0.push({label:sl, node:s}); });
+        if (!path[i].extra) { i++; break; }
+        i++;
       }
-      while (i < path.length && path[i].parent.player === 1) {
-        let l = getMoveLabel(path[i]); if (l) { row.p1.push(l); row.p1nodes.push(path[i]); let sibs = path[i].parent.children.filter(c => c !== path[i]); sibs.forEach(s => { let sl = getMoveLabel(s); if(sl) row.alts1.push({label:sl, node:s}); }); }
-        if (!path[i].extra) { i++; break; } i++;
+      // Collect second player chain
+      while (i < path.length && path[i].parent.player !== sp) {
+        let l = getMoveLabel(path[i]);
+        if (l) { row.p1.push(l); row.p1nodes.push(path[i]); }
+        let sibs = path[i].parent.children.filter(c => c !== path[i]);
+        sibs.forEach(s => { let sl = getMoveLabel(s); if(sl) row.alts1.push({label:sl, node:s}); });
+        if (!path[i].extra) { i++; break; }
+        i++;
       }
     } else {
-      while (i < path.length && path[i].parent.player === 1) {
-        let l = getMoveLabel(path[i]); if (l) { row.p1.push(l); row.p1nodes.push(path[i]); let sibs = path[i].parent.children.filter(c => c !== path[i]); sibs.forEach(s => { let sl = getMoveLabel(s); if(sl) row.alts1.push({label:sl, node:s}); }); }
-        if (!path[i].extra) { i++; break; } i++;
+      // Second player starts this row
+      while (i < path.length && path[i].parent.player !== sp) {
+        let l = getMoveLabel(path[i]);
+        if (l) { row.p1.push(l); row.p1nodes.push(path[i]); }
+        let sibs = path[i].parent.children.filter(c => c !== path[i]);
+        sibs.forEach(s => { let sl = getMoveLabel(s); if(sl) row.alts1.push({label:sl, node:s}); });
+        if (!path[i].extra) { i++; break; }
+        i++;
       }
     }
     if (row.p0.length || row.p1.length) rows.push(row);
   }
+
+  // Future mainline
   let fn = cur;
   while (fn.children.length > 0) {
     fn = fn.children[0];
     let pp = fn.parent.player;
     let row = { num: rowNum++, p0: [], p1: [], p0nodes: [], p1nodes: [], alts0: [], alts1: [], future: true };
-    if (pp === 0) {
-      while (fn) { let l = getMoveLabel(fn); if (l) { row.p0.push(l); row.p0nodes.push(fn); } if (!fn.extra || fn.children.length === 0 || fn.children[0].parent.player !== 0) break; fn = fn.children[0]; }
-      if (fn.children.length > 0 && fn.children[0].parent.player === 1) { let fn2 = fn.children[0]; while (fn2) { let l2 = getMoveLabel(fn2); if (l2) { row.p1.push(l2); row.p1nodes.push(fn2); } if (!fn2.extra || fn2.children.length === 0 || fn2.children[0].parent.player !== 1) { fn = fn2; break; } fn2 = fn2.children[0]; fn = fn2; } }
+
+    if (pp === sp) {
+      while (fn) {
+        let l = getMoveLabel(fn); if (l) { row.p0.push(l); row.p0nodes.push(fn); }
+        if (!fn.extra || fn.children.length === 0 || fn.children[0].parent.player !== sp) break;
+        fn = fn.children[0];
+      }
+      if (fn.children.length > 0 && fn.children[0].parent.player !== sp) {
+        let fn2 = fn.children[0];
+        while (fn2) {
+          let l2 = getMoveLabel(fn2); if (l2) { row.p1.push(l2); row.p1nodes.push(fn2); }
+          if (!fn2.extra || fn2.children.length === 0 || fn2.children[0].parent.player === sp) { fn = fn2; break; }
+          fn2 = fn2.children[0]; fn = fn2;
+        }
+      }
     } else {
-      while (fn) { let l = getMoveLabel(fn); if (l) { row.p1.push(l); row.p1nodes.push(fn); } if (!fn.extra || fn.children.length === 0 || fn.children[0].parent.player !== 1) break; fn = fn.children[0]; }
+      while (fn) {
+        let l = getMoveLabel(fn); if (l) { row.p1.push(l); row.p1nodes.push(fn); }
+        if (!fn.extra || fn.children.length === 0 || fn.children[0].parent.player === sp) break;
+        fn = fn.children[0];
+      }
     }
     if (row.p0.length || row.p1.length) rows.push(row);
   }
+
   return rows;
 }
 
@@ -759,11 +848,11 @@ function buildTreeTable(body, rows, isFrozen) {
     let tr = document.createElement('tr'); if (row.future) tr.style.opacity = '0.45';
     let tdNum = document.createElement('td'); tdNum.className = 'td-num'; tdNum.textContent = row.num; tr.appendChild(tdNum);
     let td0 = document.createElement('td'); let cell0 = document.createElement('div'); cell0.className = 'move-cell';
-    row.p0.forEach((m, idx) => { let token = document.createElement('span'); let isCur = !isFrozen && row.p0nodes[idx] === cur; token.className = `move-token p0${isCur?' current':''}${m.cap>0?' cap':''}`; token.textContent = `${m.from}${m.to}`; if (!isFrozen) { token.onclick = () => { cur = row.p0nodes[idx]; render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; } cell0.appendChild(token); });
+    row.p0.forEach((m, idx) => { let token = document.createElement('span'); let isCur = row.p0nodes[idx] === cur; token.className = `move-token p0${isCur?' current':''}${m.cap>0?' cap':''}`; token.textContent = `${m.from}${m.to}`; token.onclick = () => { cur = row.p0nodes[idx]; render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell0.appendChild(token); });
     if (!isFrozen) { row.alts0.forEach(alt => { let token = document.createElement('span'); token.className = 'move-token p0'; token.style.cssText = 'opacity:0.5;border:1px dashed rgba(91,163,255,0.4);background:transparent;font-size:10px;'; token.textContent = `${alt.label.from}${alt.label.to}`; token.onclick = () => { cur = alt.node; render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell0.appendChild(token); }); }
     td0.appendChild(cell0); tr.appendChild(td0);
     let td1 = document.createElement('td'); let cell1 = document.createElement('div'); cell1.className = 'move-cell';
-    row.p1.forEach((m, idx) => { let token = document.createElement('span'); let isCur = !isFrozen && row.p1nodes[idx] === cur; token.className = `move-token p1${isCur?' current':''}${m.cap>0?' cap':''}`; token.textContent = `${m.from}${m.to}`; if (!isFrozen) { token.onclick = () => { cur = row.p1nodes[idx]; render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; } cell1.appendChild(token); });
+    row.p1.forEach((m, idx) => { let token = document.createElement('span'); let isCur = row.p1nodes[idx] === cur; token.className = `move-token p1${isCur?' current':''}${m.cap>0?' cap':''}`; token.textContent = `${m.from}${m.to}`; token.onclick = () => { cur = row.p1nodes[idx]; render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell1.appendChild(token); });
     if (!isFrozen) { row.alts1.forEach(alt => { let token = document.createElement('span'); token.className = 'move-token p1'; token.style.cssText = 'opacity:0.5;border:1px dashed rgba(232,192,90,0.4);background:transparent;font-size:10px;'; token.textContent = `${alt.label.from}${alt.label.to}`; token.onclick = () => { cur = alt.node; render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell1.appendChild(token); }); }
     td1.appendChild(cell1); tr.appendChild(td1);
     tbody.appendChild(tr);
@@ -783,10 +872,10 @@ function serializeTree(node){ return { id:node.id, board:node.board, player:node
 function deserializeTree(data, parent){ let node=mkNode(data.board,data.player,parent,data.move,data.extra,data.cap); node.lastPos=data.lastPos; node.done=data.done||false; node.note=data.note||''; node.id=data.id; node.children=data.children.map(c=>deserializeTree(c,node)); return node; }
 
 function doSave(){
-  let name=document.getElementById('save-name').value.trim()||`Game ${new Date().toLocaleTimeString()}`;
+  let name=document.getElementById('save-name').value.trim()||`Game ${new Date().toLocaleDateString()+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
   let note=document.getElementById('save-note').value.trim();
   let saves=getSaves(); let id=Date.now();
-  saves[id]={ id, name, note, score:`${cur.board[6]}-${cur.board[13]}`, date:new Date().toLocaleDateString(), curId:cur.id, tree:serializeTree(root) };
+  saves[id]={ id, name, note, score:`${cur.board[6]}-${cur.board[13]}`, date:new Date().toLocaleDateString()+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), startPlayer:root.player, curId:cur.id, tree:serializeTree(root) };
   localStorage.setItem('mg_saves',JSON.stringify(saves));
   document.getElementById('save-name').value=''; document.getElementById('save-note').value='';
   renderStats(); closePanel();
@@ -819,9 +908,25 @@ function closePanel(){ if(activePanel){ document.getElementById('panel-'+activeP
 // ============================================================
 // WIN
 // ============================================================
-function showWin(b){ let w=winner(b); let nb=[...b]; let s0=nb.slice(0,6).reduce((a,v)=>a+v,0),s1=nb.slice(7,13).reduce((a,v)=>a+v,0); if(s0===0){nb[6]+=s0+s1;}else if(s1===0){nb[13]+=s0+s1;} document.getElementById('win-title').textContent=`${nb[6]} — ${nb[13]}`; document.getElementById('win-score').textContent=w===0?'1 — 0':w===1?'0 — 1':'½ — ½'; document.getElementById('win-sub').textContent=w===0?'P1 wins':w===1?'P2 wins':'Draw'; document.getElementById('win-overlay').classList.add('show'); }
+function showWin(b){
+  let w=winner(b);
+  let nb=[...b];
+  let s0=nb.slice(0,6).reduce((a,v)=>a+v,0),s1=nb.slice(7,13).reduce((a,v)=>a+v,0);
+  if(s0===0){nb[6]+=s0+s1;}else if(s1===0){nb[13]+=s0+s1;}
+  // Первый = тот кто начинал
+  let first = root.player; // 0=синий, 1=золотой
+  let sf = first===0 ? nb[6] : nb[13];
+  let ss = first===0 ? nb[13] : nb[6];
+  document.getElementById('win-title').textContent=`${sf} — ${ss}`;
+  // 1-0 если первый победил, 0-1 если проиграл
+  let firstWon = (first===0 && w===0) || (first===1 && w===1);
+  let secondWon = (first===0 && w===1) || (first===1 && w===0);
+  document.getElementById('win-score').textContent = firstWon?'1 — 0':secondWon?'0 — 1':'½ — ½';
+  document.getElementById('win-sub').textContent = firstWon?'Первый побеждает':secondWon?'Второй побеждает':'Ничья';
+  document.getElementById('win-overlay').classList.add('show');
+}
 function closeWin(){ document.getElementById('win-overlay').classList.remove('show'); }
-function saveFromWin(){ let name=document.getElementById('win-save-name').value.trim(); let result=document.getElementById('win-score').textContent; if(!name)name=`Game ${new Date().toLocaleDateString()} ${result}`; let saves=getSaves(); let id=Date.now(); saves[id]={id,name,note:result,score:`${cur.board[6]}-${cur.board[13]}`,date:new Date().toLocaleDateString(),curId:cur.id,tree:serializeTree(root)}; localStorage.setItem('mg_saves',JSON.stringify(saves)); document.getElementById('win-save-name').value=''; closeWin(); }
+function saveFromWin(){ let name=document.getElementById('win-save-name').value.trim(); let result=document.getElementById('win-score').textContent; if(!name)name=`Game ${new Date().toLocaleDateString()} ${result}`; let saves=getSaves(); let id=Date.now(); saves[id]={id,name,note:result,score:`${cur.board[6]}-${cur.board[13]}`,date:new Date().toLocaleDateString()+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),startPlayer:root.player,curId:cur.id,tree:serializeTree(root)}; localStorage.setItem('mg_saves',JSON.stringify(saves)); document.getElementById('win-save-name').value=''; closeWin(); }
 
 let touchY=0;
 document.querySelectorAll('.panel').forEach(p=>{ p.addEventListener('touchstart',e=>touchY=e.touches[0].clientY,{passive:true}); p.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-touchY>60)closePanel();},{passive:true}); });
@@ -834,36 +939,561 @@ newGame();
 let dtScale = 1;
 const DT_SCALES = [0.5,0.6,0.7,0.8,0.9,1.0,1.15,1.3,1.5,1.75,2.0];
 
-function openDebutTree(){ let ov=document.getElementById('dt-overlay'); ov.style.display='flex'; document.getElementById('dt-pit-select').style.display='flex'; document.getElementById('dt-table-area').style.display='none'; dtScale=1; document.getElementById('dt-zoom-lbl').textContent='100%'; }
-function closeDebutTree(){ document.getElementById('dt-overlay').style.display='none'; }
+function openDebutTree(){ let ov=document.getElementById('dt-overlay'); ov.style.display='flex'; document.getElementById('dt-pit-select').style.display='flex'; document.getElementById('dt-root-select').style.display='none'; document.getElementById('dt-table-area').style.display='none'; dtScale=1; document.getElementById('dt-zoom-lbl').textContent='100%'; }
+function closeDebutTree(){ document.getElementById('dt-overlay').style.display='none'; document.getElementById('dt-title').textContent='DEBUT TREE'; document.getElementById('dt-title').style.color='var(--gold)'; }
+
+let dtMode = 'main';
+function dtGoBack(){
+  document.getElementById('dt-table-area').style.display='none';
+  document.getElementById('dt-table').innerHTML='';
+  if(dtMode==='root'){
+    document.getElementById('dt-root-select').style.display='flex';
+  } else {
+    document.getElementById('dt-pit-select').style.display='flex';
+    document.getElementById('dt-title').textContent='DEBUT TREE';
+    document.getElementById('dt-title').style.color='var(--gold)';
+  }
+}
+function dtShowRoot(){
+  document.getElementById('dt-pit-select').style.display='none';
+  document.getElementById('dt-root-select').style.display='flex';
+  document.getElementById('dt-table-area').style.display='none';
+  document.getElementById('dt-title').textContent='КОРЕНЬ';
+  document.getElementById('dt-title').style.color='var(--green)';
+}
+function dtBackToMain(){
+  document.getElementById('dt-pit-select').style.display='flex';
+  document.getElementById('dt-root-select').style.display='none';
+  document.getElementById('dt-table-area').style.display='none';
+  document.getElementById('dt-title').textContent='DEBUT TREE';
+  document.getElementById('dt-title').style.color='var(--gold)';
+}
+
+function dtBuildRoot(pit) {
+  dtMode = 'root';
+  document.getElementById('dt-root-select').style.display = 'none';
+  document.getElementById('dt-table-area').style.display = 'block';
+  let saves = getSaves();
+  let table = document.getElementById('dt-table');
+  table.innerHTML = '';
+
+  let games = Object.values(saves).filter(g => {
+    if (!g.tree || !g.tree.children || g.tree.children.length === 0) return false;
+    let sp = g.startPlayer !== undefined ? g.startPlayer : g.tree.player;
+    let firstMove = g.tree.children[0].move;
+    return sp === 0 ? firstMove === pit - 1 : firstMove === pit + 6;
+  });
+
+  if (!games.length) {
+    let tr = document.createElement('tr'), td = document.createElement('td');
+    td.style.cssText = 'padding:20px;color:var(--muted);font-family:IBM Plex Mono,monospace';
+    td.textContent = 'Нет сохранённых игр с ходом ' + pit;
+    tr.appendChild(td); table.appendChild(tr); return;
+  }
+
+  let allPaths = [];
+  let seenKeys = new Set();
+  games.forEach(g => {
+    let sp = g.startPlayer !== undefined ? g.startPlayer : (g.tree ? g.tree.player : 0);
+    let path = dtFlatten(dtDeserTree(g.tree, null), null);
+    if (!path || !path.length) return;
+    let key = path.map(n => dtLabelStr(n, sp)).join(',');
+    if (seenKeys.has(key)) return;
+    seenKeys.add(key);
+    allPaths.push({ name: g.name || '', note: g.note || '', saveId: g.id, sp, path });
+  });
+  if (!allPaths.length) return;
+
+  let thead = document.createElement('thead');
+  thead.innerHTML = '<tr>' +
+    '<th style="color:var(--muted);font-size:11px;padding:4px 8px;text-align:left;font-family:IBM Plex Mono;width:28px">#</th>' +
+    '<th style="color:var(--muted);font-size:11px;padding:4px 8px;text-align:left;font-family:IBM Plex Mono">P1</th>' +
+    '<th style="color:var(--muted);font-size:11px;padding:4px 8px;text-align:left;font-family:IBM Plex Mono">P2</th>' +
+    '</tr>';
+  table.appendChild(thead);
+
+  function makeTok(node, sp, saveId, isP2) {
+    let lbl = dtLabelStr(node, sp); if (!lbl) return null;
+    let tok = document.createElement('span');
+    tok.style.cssText = 'display:inline-block;padding:4px 8px;border-radius:6px;font-size:13px;font-weight:700;' +
+      'margin:1px 2px;cursor:pointer;' +
+      (isP2 ? 'background:rgba(150,150,170,0.10);color:#aaa;' : 'background:rgba(238,238,245,0.12);color:var(--text);');
+    if (node.cap > 0) tok.style.textDecoration = 'underline';
+    tok.textContent = lbl;
+    tok.onclick = () => {
+      let bstr = JSON.stringify(node.board);
+      function findB(nd) { if(JSON.stringify(nd.board)===bstr)return nd; for(let ch of nd.children){let f=findB(ch);if(f)return f;} return null; }
+      let live = findB(root);
+      if (live) { cur=live; render(); closeDebutTree(); return; }
+      loadSave(saveId);
+      setTimeout(()=>{ let found=findB(root); if(found){cur=found;render();} closeDebutTree(); }, 80);
+    };
+    return tok;
+  }
+
+  // Метка строки для сравнения
+  function rowLabelKey(row, sp) {
+    let p1 = row.p1.map(n => dtLabelStr(n, sp)).join(',');
+    let p2 = row.p2.map(n => dtLabelStr(n, sp)).join(',');
+    return p1 + '|' + p2;
+  }
+
+  // Добавить строку таблицы
+  function addTr(tbody, rn, p1nodes, p2nodes, sp, saveId) {
+    let tr = document.createElement('tr');
+    tr.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+    let tdN = document.createElement('td');
+    tdN.style.cssText = 'color:var(--muted);font-size:11px;padding:4px 8px;font-family:IBM Plex Mono;vertical-align:top;white-space:nowrap;';
+    tdN.textContent = rn + '.';
+    let tdP1 = document.createElement('td'); tdP1.style.cssText = 'padding:2px 4px;vertical-align:top;';
+    let tdP2 = document.createElement('td'); tdP2.style.cssText = 'padding:2px 4px;vertical-align:top;';
+    p1nodes.forEach(n => { let t=makeTok(n,sp,saveId,false); if(t) tdP1.appendChild(t); });
+    p2nodes.forEach(n => { let t=makeTok(n,sp,saveId,true);  if(t) tdP2.appendChild(t); });
+    tr.appendChild(tdN); tr.appendChild(tdP1); tr.appendChild(tdP2);
+    tbody.appendChild(tr);
+  }
+
+  // Создать ветку-кнопку
+  function makeBranchBtn(firstRow, sp, saveId, cnt, isP2branch) {
+    let wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-bottom:2px;';
+    let hdr = document.createElement('div');
+    hdr.style.cssText = 'display:flex;align-items:center;gap:4px;cursor:pointer;padding:2px 0;flex-wrap:wrap;';
+    let arrow = document.createElement('span');
+    arrow.textContent = '▶';
+    arrow.style.cssText = 'font-size:10px;color:var(--green);flex-shrink:0;transition:transform 0.15s;';
+    hdr.appendChild(arrow);
+
+    // P1 ходы белые, P2 ходы серые, разделитель │
+    if (!isP2branch) {
+      firstRow.p1.forEach(n => {
+        let lbl = dtLabelStr(n, sp); if (!lbl) return;
+        let s = document.createElement('span');
+        s.style.cssText = 'display:inline-block;padding:4px 8px;border-radius:6px;font-size:13px;font-weight:700;margin:0 2px;background:rgba(238,238,245,0.12);color:var(--text);';
+        if (n.cap > 0) s.style.textDecoration = 'underline';
+        s.textContent = lbl; hdr.appendChild(s);
+      });
+      if (firstRow.p1.length && firstRow.p2.length) {
+        let sep = document.createElement('span'); sep.style.cssText='color:var(--muted);margin:0 2px;'; sep.textContent='│'; hdr.appendChild(sep);
+      }
+      firstRow.p2.forEach(n => {
+        let lbl = dtLabelStr(n, sp); if (!lbl) return;
+        let s = document.createElement('span');
+        s.style.cssText = 'display:inline-block;padding:4px 8px;border-radius:6px;font-size:13px;font-weight:700;margin:0 2px;background:rgba(150,150,170,0.10);color:#aaa;';
+        if (n.cap > 0) s.style.textDecoration = 'underline';
+        s.textContent = lbl; hdr.appendChild(s);
+      });
+    } else {
+      firstRow.p2.forEach(n => {
+        let lbl = dtLabelStr(n, sp); if (!lbl) return;
+        let s = document.createElement('span');
+        s.style.cssText = 'display:inline-block;padding:4px 8px;border-radius:6px;font-size:13px;font-weight:700;margin:0 2px;background:rgba(150,150,170,0.10);color:#aaa;';
+        if (n.cap > 0) s.style.textDecoration = 'underline';
+        s.textContent = lbl; hdr.appendChild(s);
+      });
+    }
+
+    if (cnt > 1) {
+      let c = document.createElement('span');
+      c.style.cssText = 'font-size:10px;color:rgba(61,219,133,0.55);';
+      c.textContent = cnt + 'п'; hdr.appendChild(c);
+    }
+
+    let indent = document.createElement('div');
+    indent.style.cssText = 'border-left:2px solid rgba(61,219,133,0.2);margin-left:8px;padding-left:8px;display:none;margin-top:2px;';
+    wrap.appendChild(hdr); wrap.appendChild(indent);
+
+    hdr.onclick = () => {
+      let open = indent.style.display !== 'none';
+      indent.style.display = open ? 'none' : 'block';
+      arrow.style.transform = open ? '' : 'rotate(90deg)';
+    };
+
+    return { wrap, indent, arrow };
+  }
+
+  // Главная рекурсивная функция
+  function renderPaths(tbody, paths, rowNum) {
+    if (!paths.length) return rowNum;
+
+    let allRows = paths.map(b => ({ rows: dtGroupRows(b.path, b.sp), sp: b.sp, saveId: b.saveId, b }));
+    let maxR = Math.max(...allRows.map(r => r.rows.length));
+    let rn = rowNum;
+
+    for (let r = 0; r < maxR; r++) {
+      let sp0 = allRows[0].sp, sid0 = allRows[0].saveId;
+      let refRow = allRows[0].rows[r];
+      if (!refRow) continue;
+      let refKey = rowLabelKey(refRow, sp0);
+
+      // Все одинаковые?
+      let allSame = allRows.every(({rows, sp}) => {
+        let row = rows[r];
+        return row && rowLabelKey(row, sp) === refKey;
+      });
+
+      if (allSame) {
+        addTr(tbody, rn++, refRow.p1, refRow.p2, sp0, sid0);
+        continue;
+      }
+
+      // P1 одинаковый?
+      let p1key = refRow.p1.map(n => dtLabelStr(n, sp0)).join(',');
+      let p1Same = allRows.every(({rows, sp}) => {
+        let row = rows[r];
+        return row && row.p1.map(n => dtLabelStr(n, sp)).join(',') === p1key;
+      });
+
+      if (p1Same) {
+        // P1 общий, P2 разделился — рисуем строку с P1, в P2 колонке ветки
+        let tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+        let tdN = document.createElement('td');
+        tdN.style.cssText = 'color:var(--muted);font-size:11px;padding:4px 8px;font-family:IBM Plex Mono;vertical-align:top;white-space:nowrap;';
+        tdN.textContent = rn + '.';
+        let tdP1 = document.createElement('td'); tdP1.style.cssText = 'padding:2px 4px;vertical-align:top;';
+        let tdP2 = document.createElement('td'); tdP2.style.cssText = 'padding:2px 4px;vertical-align:top;';
+        refRow.p1.forEach(n => { let t=makeTok(n,sp0,sid0,false); if(t) tdP1.appendChild(t); });
+
+        // Группируем по P2 метке
+        let groups = new Map();
+        allRows.forEach(({rows, sp, saveId, b}) => {
+          let row = rows[r];
+          let k = row ? row.p2.map(n => dtLabelStr(n, sp)).join(',') : '__empty__';
+          if (!groups.has(k)) groups.set(k, []);
+          groups.get(k).push({ b, sp, saveId, row });
+        });
+
+        groups.forEach((items, gkey) => {
+          let gPaths = items.map(i => i.b);
+          let gSp = items[0].sp, gSid = items[0].saveId;
+          let gRow = items[0].row;
+          if (!gRow || !gRow.p2.length) return;
+
+          let { wrap, indent } = makeBranchBtn(gRow, gSp, gSid, gPaths.length, true);
+          tdP2.appendChild(wrap);
+
+          // Ленивый рендер при раскрытии
+          let rendered = false;
+          wrap.querySelector('div').addEventListener('click', () => {
+            if (rendered) return; rendered = true;
+            // Субпути: начинаем с P2 узла текущей строки
+            let subPaths = gPaths.map(b => {
+              let bRows = dtGroupRows(b.path, b.sp);
+              let bRow = bRows[r];
+              if (!bRow || !bRow.p2.length) return null;
+              let startNode = bRow.p2[0];
+              let idx = b.path.indexOf(startNode);
+              if (idx < 0) return null;
+              return { ...b, path: b.path.slice(idx) };
+            }).filter(Boolean);
+            let subTable = document.createElement('table');
+            subTable.style.cssText = 'border-collapse:collapse;width:100%;';
+            let subThead = document.createElement('thead');
+            subThead.innerHTML = '<tr><th style="color:var(--muted);font-size:10px;padding:2px 8px;text-align:left;font-family:IBM Plex Mono;width:28px">#</th><th style="color:var(--muted);font-size:10px;padding:2px 8px;text-align:left;font-family:IBM Plex Mono">P1</th><th style="color:var(--muted);font-size:10px;padding:2px 8px;text-align:left;font-family:IBM Plex Mono">P2</th></tr>';
+            let subTbody = document.createElement('tbody');
+            subTable.appendChild(subThead);
+            subTable.appendChild(subTbody);
+            indent.appendChild(subTable);
+            renderPaths(subTbody, subPaths, rn);
+          }, { once: true });
+        });
+
+        tr.appendChild(tdN); tr.appendChild(tdP1); tr.appendChild(tdP2);
+        tbody.appendChild(tr);
+        rn++;
+        return rn; // дальше только в ветках
+      }
+
+      // P1 тоже разный — ветки по всей строке
+      let groups = new Map();
+      allRows.forEach(({rows, sp, saveId, b}) => {
+        let row = rows[r];
+        let k = row ? rowLabelKey(row, sp) : '__empty__';
+        if (!groups.has(k)) groups.set(k, []);
+        groups.get(k).push({ b, sp, saveId, row });
+      });
+
+      let tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+      let tdN = document.createElement('td');
+      tdN.style.cssText = 'color:var(--muted);font-size:11px;padding:4px 8px;font-family:IBM Plex Mono;vertical-align:top;white-space:nowrap;';
+      tdN.textContent = rn + '.';
+      let tdBranch = document.createElement('td');
+      tdBranch.colSpan = 2;
+      tdBranch.style.cssText = 'padding:2px 4px;vertical-align:top;';
+
+      groups.forEach((items) => {
+        let gPaths = items.map(i => i.b);
+        let gSp = items[0].sp, gSid = items[0].saveId;
+        let gRow = items[0].row;
+        if (!gRow) return;
+        let isP2first = !gRow.p1.length;
+
+        let { wrap, indent } = makeBranchBtn(gRow, gSp, gSid, gPaths.length, isP2first);
+        tdBranch.appendChild(wrap);
+
+        let rendered = false;
+        wrap.querySelector('div').addEventListener('click', () => {
+          if (rendered) return; rendered = true;
+          let subPaths = gPaths.map(b => {
+            let bRows = dtGroupRows(b.path, b.sp);
+            let bRow = bRows[r];
+            if (!bRow) return null;
+            let startNode = bRow.p1[0] || bRow.p2[0];
+            if (!startNode) return null;
+            let idx = b.path.indexOf(startNode);
+            if (idx < 0) return null;
+            return { ...b, path: b.path.slice(idx) };
+          }).filter(Boolean);
+          let subTable = document.createElement('table');
+          subTable.style.cssText = 'border-collapse:collapse;width:100%;';
+          let subTbody = document.createElement('tbody');
+          subTable.appendChild(subTbody);
+          indent.appendChild(subTable);
+          renderPaths(subTbody, subPaths, rn);
+        }, { once: true });
+      });
+
+      tr.appendChild(tdN); tr.appendChild(tdBranch);
+      tbody.appendChild(tr);
+      rn++;
+      return rn;
+    }
+    // Если один путь — показываем имя и счёт в конце
+    if (paths.length === 1) {
+      let b = paths[0];
+      let lastNode = b.path[b.path.length - 1];
+      let score = lastNode ? lastNode.board[6] + ' — ' + lastNode.board[13] : '';
+      let hasInfo = b.name || b.note || score;
+      if (hasInfo) {
+        let tr = document.createElement('tr');
+        let td = document.createElement('td');
+        td.colSpan = 3;
+        td.style.cssText = 'padding:6px 8px 10px;';
+        let info = document.createElement('div');
+        info.style.cssText = 'display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.06);padding-top:6px;margin-top:2px;';
+        if (b.name) {
+          let nm = document.createElement('span');
+          nm.style.cssText = "font-family:'Syne',sans-serif;font-size:11px;letter-spacing:1px;color:var(--green);";
+          nm.textContent = b.name;
+          info.appendChild(nm);
+        }
+        if (score) {
+          let sc = document.createElement('span');
+          sc.style.cssText = "font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--gold);";
+          sc.textContent = score;
+          info.appendChild(sc);
+        }
+        if (b.note) {
+          let nt = document.createElement('span');
+          nt.style.cssText = 'font-size:11px;color:var(--muted);font-family:IBM Plex Mono,monospace;';
+          nt.textContent = b.note;
+          info.appendChild(nt);
+        }
+        td.appendChild(info);
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
+    }
+
+    return rn;
+  }
+
+  let tbody = document.createElement('tbody');
+  table.appendChild(tbody);
+  renderPaths(tbody, allPaths, 1);
+  dtScale = 1; document.getElementById('dt-zoom-lbl').textContent = '100%';
+}
+
 
 function dtZoom(dir){ let idx=DT_SCALES.findIndex(s=>Math.abs(s-dtScale)<0.01); if(idx===-1)idx=5; idx=Math.max(0,Math.min(DT_SCALES.length-1,idx+dir)); dtScale=DT_SCALES[idx]; let tbl=document.getElementById('dt-table'); if(tbl){let inner=tbl.querySelector('td > div');let el=inner||tbl;el.style.transformOrigin='top left';el.style.transform=`scale(${dtScale})`;} document.getElementById('dt-zoom-lbl').textContent=Math.round(dtScale*100)+'%'; }
 
 function dtDeserTree(data,parent){ let node={id:data.id,board:data.board,player:data.player,move:data.move,extra:data.extra,cap:data.cap,lastPos:data.lastPos,parent:parent,children:[]}; node.children=(data.children||[]).map(c=>dtDeserTree(c,node)); return node; }
-function dtLabelStr(node){ if(node.move===undefined||node.move===null)return''; if(!node.parent)return''; let pp=node.parent.player; let from=pp===0?node.move+1:node.move-6; let to; if(node.lastPos===6||node.lastPos===13){to='M';}else if(node.lastPos>=7&&node.lastPos<=12){to=node.lastPos-6;}else{to=node.lastPos+1;} return`${from}${to}`; }
-function dtFlatten(tree,curId){ function findPath(node,tid,path){let p=[...path,node];if(node.id===tid)return p;for(let c of(node.children||[])){let r=findPath(c,tid,p);if(r)return r;}return null;} if(curId!==undefined&&curId!==null){let path=findPath(tree,curId,[]);if(path&&path.length>1)return path.slice(1);} let flat=[],n=tree.children&&tree.children.length>0?tree.children[0]:null; while(n){flat.push(n);n=n.children&&n.children.length>0?n.children[0]:null;} return flat; }
-function dtMover(node){ return node.parent?node.parent.player:0; }
-function dtGroupRows(path){ let rows=[],rowNum=1,i=0; while(i<path.length){let mover=dtMover(path[i]);let row={rowNum:rowNum++,p1:[],p2:[]};if(mover===0){while(i<path.length&&dtMover(path[i])===0){row.p1.push(path[i]);let wasExtra=path[i].extra;i++;if(!wasExtra)break;}while(i<path.length&&dtMover(path[i])===1){row.p2.push(path[i]);let wasExtra=path[i].extra;i++;if(!wasExtra)break;}}else{while(i<path.length&&dtMover(path[i])===1){row.p2.push(path[i]);let wasExtra=path[i].extra;i++;if(!wasExtra)break;}}if(row.p1.length||row.p2.length)rows.push(row);}return rows; }
 
-function dtSelectPit(pit){
-  document.getElementById('dt-pit-select').style.display='none';
-  document.getElementById('dt-table-area').style.display='block';
-  let saves=getSaves();
-  let games=Object.values(saves).filter(g=>{if(!g.tree||!g.tree.children||g.tree.children.length===0)return false;return g.tree.children[0].move===pit-1;});
-  let table=document.getElementById('dt-table'); table.innerHTML='';
-  if(games.length===0){let tr=document.createElement('tr');let td=document.createElement('td');td.style.cssText='padding:20px;color:var(--muted);font-family:IBM Plex Mono,monospace';td.textContent='Нет сохранённых игр с ходом '+pit;tr.appendChild(td);table.appendChild(tr);return;}
-  let allPaths=games.map(g=>({name:g.name||'',note:g.note||'',saveId:g.id,path:dtFlatten(dtDeserTree(g.tree,null),g.curId)})).filter(b=>b.path.length>0);
-  let seen=new Set(); allPaths=allPaths.filter(b=>{let key=b.path.map(n=>dtLabelStr(n)).join(',');if(seen.has(key))return false;seen.add(key);return true;});
-  function getRows(b){return dtGroupRows(b.path);}
-  function buildTree(paths){if(!paths.length)return null;let rows=paths.map(getRows);let maxR=Math.max(...rows.map(r=>r.length));let commonRows=[];let r=0;while(r<maxR){let p1b=new Set(),p2b=new Set();paths.forEach((b,v)=>{let row=rows[v][r];if(row&&row.p1.length)p1b.add(JSON.stringify(row.p1[row.p1.length-1].board));if(row&&row.p2.length)p2b.add(JSON.stringify(row.p2[row.p2.length-1].board));});if(p1b.size>1||p2b.size>1)break;if(rows[0][r])commonRows.push(rows[0][r]);r++;}if(r>=maxR)return{commonRows,children:[],paths};let groups=new Map();paths.forEach((b,v)=>{let row=rows[v][r];let key=row?[...row.p1,...row.p2].map(n=>dtLabelStr(n)).join(','):'';if(!groups.has(key))groups.set(key,[]);groups.get(key).push(b);});let children=[];groups.forEach(subPaths=>{children.push({paths:subPaths,subtree:buildTree(subPaths)});});return{commonRows,children,paths};}
-  let tree=buildTree(allPaths);
-  if(!document.getElementById('dt-style')){let st=document.createElement('style');st.id='dt-style';st.textContent=`.dt-line{display:flex;align-items:baseline;padding:3px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;}.dt-num{color:var(--muted);min-width:28px;flex-shrink:0;font-size:11px;}.dt-tok{display:inline-block;padding:4px 8px;border-radius:6px;font-size:13px;font-weight:700;margin:1px 2px;cursor:pointer;min-height:28px;}.dt-tok:active{opacity:0.7;}.dt-tok.p0{background:rgba(91,163,255,0.13);color:var(--blue);}.dt-tok.p1{background:rgba(232,192,90,0.13);color:var(--gold);}.dt-tok.cur{box-shadow:0 0 0 2px var(--green);}.dt-tok.cap{text-decoration:underline;}.dt-sep{color:var(--muted);margin:0 4px;}.dt-branch-header{display:flex;align-items:center;margin:8px 0 2px;font-size:12px;font-family:'Syne',sans-serif;letter-spacing:1px;color:var(--green);padding:6px 4px;border-radius:6px;background:rgba(61,219,133,0.05);min-height:36px;cursor:pointer;}.dt-branch-line{flex:1;height:1px;background:rgba(61,219,133,0.25);margin-left:6px;}.dt-result{font-size:11px;font-weight:700;font-family:'IBM Plex Mono',monospace;margin:3px 0 8px;}.dt-indent{border-left:2px solid rgba(61,219,133,0.2);margin-left:10px;padding-left:12px;}`;document.head.appendChild(st);}
-  function makeTokEl(node){let lbl=dtLabelStr(node);if(!lbl)return null;let mover=node.parent?node.parent.player:0;let tok=document.createElement('span');tok.className=`dt-tok ${mover===0?'p0':'p1'}${node===cur?' cur':''}${node.cap>0?' cap':''}`;tok.textContent=lbl;tok.onclick=()=>{let tb=JSON.stringify(node.board);function find(n){if(JSON.stringify(n.board)===tb)return n;for(let c of n.children){let f=find(c);if(f)return f;}return null;}let live=find(root);if(live){cur=live;render();closeDebutTree();return;}let saves2=getSaves();for(let s of Object.values(saves2)){if(!s.tree)continue;let f=find(dtDeserTree(s.tree,null));if(f){loadSave(s.id);setTimeout(()=>{let la=find(root);if(la){cur=la;render();}closeDebutTree();},60);return;}}closeDebutTree();};return tok;}
-  function renderRow(container,row,rowNum){if(!row||(!row.p1.length&&!row.p2.length))return;let line=document.createElement('div');line.className='dt-line';let numEl=document.createElement('span');numEl.className='dt-num';numEl.textContent=rowNum+'.';line.appendChild(numEl);row.p1.forEach(n=>{let t=makeTokEl(n);if(t)line.appendChild(t);});if(row.p1.length&&row.p2.length){let sep=document.createElement('span');sep.className='dt-sep';sep.textContent='│';line.appendChild(sep);}row.p2.forEach(n=>{let t=makeTokEl(n);if(t)line.appendChild(t);});container.appendChild(line);}
-  function renderTree(node,container,startRowNum,depth){if(!node)return;let rn=startRowNum;node.commonRows.forEach(row=>{renderRow(container,row,rn++);});if(node.children.length===0){let b=node.paths[0];if(b.note){let res=document.createElement('div');res.className='dt-result';res.style.cssText='padding-left:28px;'+(b.note.includes('½')?'color:var(--muted)':b.note.startsWith('1')?'color:var(--blue)':'color:var(--gold)');res.textContent=b.note;container.appendChild(res);}return;}node.children.forEach(child=>{let names=child.paths.map(p=>p.name).join(' / ');let arrows=depth===0?'▶':'▶▶'.slice(0,depth+1);let hdr=document.createElement('div');hdr.className='dt-branch-header';hdr.setAttribute('data-open','0');let arrow=document.createElement('span');arrow.textContent=arrows+' ';let nameSpan=document.createElement('span');nameSpan.textContent=names;let line=document.createElement('span');line.className='dt-branch-line';hdr.appendChild(arrow);hdr.appendChild(nameSpan);hdr.appendChild(line);container.appendChild(hdr);let indentDiv=document.createElement('div');indentDiv.className='dt-indent';indentDiv.style.display='none';container.appendChild(indentDiv);hdr.onclick=()=>{let isOpen=hdr.getAttribute('data-open')==='1';if(isOpen){indentDiv.style.display='none';arrow.textContent=arrows+' ';hdr.setAttribute('data-open','0');}else{indentDiv.style.display='block';arrow.textContent=(depth===0?'▼':'▼▼'.slice(0,depth+1))+' ';hdr.setAttribute('data-open','1');if(!indentDiv.hasChildNodes())renderTree(child.subtree,indentDiv,rn,depth+1);}};});}
-  let wrapper=document.createElement('tr');let td=document.createElement('td');td.style.padding='12px';let div=document.createElement('div');renderTree(tree,div,1,0);td.appendChild(div);wrapper.appendChild(td);table.appendChild(wrapper);
-  dtScale=1;document.getElementById('dt-zoom-lbl').textContent='100%';div.style.transformOrigin='top left';
+// Разворачиваем дерево в путь до curId (или до конца главной линии)
+function dtFlatten(tree, curId) {
+  // Ищем путь до curId
+  function findPath(node, tid, path) {
+    let p = [...path, node];
+    if (node.id === tid) return p;
+    for (let c of (node.children || [])) { let r = findPath(c, tid, p); if (r) return r; }
+    return null;
+  }
+  if (curId !== undefined && curId !== null) {
+    let path = findPath(tree, curId, []);
+    if (path && path.length > 1) return path.slice(1); // убираем root
+  }
+  // Главная линия
+  let flat = [], n = tree.children && tree.children.length > 0 ? tree.children[0] : null;
+  while (n) { flat.push(n); n = n.children && n.children.length > 0 ? n.children[0] : null; }
+  return flat;
 }
+// sp = startPlayer (кто начал: 0 или 1)
+function dtLabelStr(node, sp) {
+  if(node.move===undefined||node.move===null)return'';
+  if(!node.parent)return'';
+  let pp=node.parent.player;
+  let from=pp===0?node.move+1:node.move-6;
+  let to;
+  if(node.lastPos===6||node.lastPos===13){to='M';}
+  else if(node.lastPos>=7&&node.lastPos<=12){to=node.lastPos-6;}
+  else{to=node.lastPos+1;}
+  return`${from}→${to}`;
+}
+
+// 0 = первый игрок (тот кто начал), 1 = второй
+function dtMover(node, sp) {
+  if(!node.parent) return 0;
+  sp = sp!==undefined ? sp : 0;
+  return node.parent.player === sp ? 0 : 1;
+}
+
+function dtGroupRows(path, sp) {
+  let rows=[],rowNum=1,i=0;
+  while(i<path.length){
+    let mover=dtMover(path[i],sp);
+    let row={rowNum:rowNum++,p1:[],p2:[]};
+    if(mover===0){
+      while(i<path.length&&dtMover(path[i],sp)===0){row.p1.push(path[i]);let wasExtra=path[i].extra;i++;if(!wasExtra)break;}
+      while(i<path.length&&dtMover(path[i],sp)===1){row.p2.push(path[i]);let wasExtra=path[i].extra;i++;if(!wasExtra)break;}
+    } else {
+      while(i<path.length&&dtMover(path[i],sp)===1){row.p2.push(path[i]);let wasExtra=path[i].extra;i++;if(!wasExtra)break;}
+    }
+    if(row.p1.length||row.p2.length)rows.push(row);
+  }
+  return rows;
+}
+
+function dtSelectPit(pit) {
+  dtMode = 'main';
+  document.getElementById('dt-pit-select').style.display = 'none';
+  document.getElementById('dt-table-area').style.display = 'block';
+  let saves = getSaves();
+
+  // Фильтр: первый ход первого игрока = pit
+  let games = Object.values(saves).filter(g => {
+    if (!g.tree || !g.tree.children || g.tree.children.length === 0) return false;
+    let sp = g.startPlayer !== undefined ? g.startPlayer : g.tree.player;
+    let firstMove = g.tree.children[0].move;
+    if (sp === 0) return firstMove === pit - 1;
+    else return firstMove === pit + 6;
+  });
+
+  let table = document.getElementById('dt-table'); table.innerHTML = '';
+  if (games.length === 0) {
+    let tr = document.createElement('tr'); let td = document.createElement('td');
+    td.style.cssText = 'padding:20px;color:var(--muted);font-family:IBM Plex Mono,monospace';
+    td.textContent = 'Нет сохранённых игр с ходом ' + pit;
+    tr.appendChild(td); table.appendChild(tr); return;
+  }
+
+  if (!document.getElementById('dt-style')) {
+    let st = document.createElement('style'); st.id = 'dt-style';
+    st.textContent = `
+      .dt-section { margin-bottom:16px; }
+      .dt-game-name { font-family:'Syne',sans-serif; font-size:11px; letter-spacing:1px; color:var(--green); padding:6px 4px 2px; }
+      .dt-table2 { width:100%; border-collapse:collapse; font-family:'IBM Plex Mono',monospace; font-size:13px; }
+      .dt-table2 th { color:var(--muted); font-size:11px; padding:2px 6px 4px; text-align:left; }
+      .dt-table2 td { padding:2px 4px; vertical-align:top; }
+      .dt-table2 tr { border-bottom:1px solid rgba(255,255,255,0.04); }
+      .dt-tok { display:inline-block; padding:4px 8px; border-radius:6px; font-size:13px; font-weight:700; margin:1px 2px; cursor:pointer; background:rgba(238,238,245,0.12); color:var(--text); }
+      .dt-tok.p1 { background:rgba(150,150,170,0.10); color:#aaa; }
+      .dt-tok:active { opacity:0.7; }
+      .dt-tok.cap { text-decoration:underline; }
+      .dt-num { color:var(--muted); font-size:11px; }
+    `;
+    document.head.appendChild(st);
+  }
+
+  // Для каждой игры строим таблицу
+  games.forEach(g => {
+    let sp = g.startPlayer !== undefined ? g.startPlayer : (g.tree ? g.tree.player : 0);
+    let dtRoot = dtDeserTree(g.tree, null);
+    let path = dtFlatten(dtRoot, null);
+    if (!path || path.length === 0) return;
+
+    let rows = dtGroupRows(path, sp);
+    if (!rows.length) return;
+
+    let section = document.createElement('div'); section.className = 'dt-section';
+    let nameEl = document.createElement('div'); nameEl.className = 'dt-game-name';
+    nameEl.textContent = (g.name || 'Игра') + (g.note ? '  ' + g.note : '');
+    section.appendChild(nameEl);
+
+    let tbl = document.createElement('table'); tbl.className = 'dt-table2';
+    tbl.innerHTML = '<thead><tr><th>#</th><th>P1</th><th>P2</th></tr></thead>';
+    let tbody = document.createElement('tbody');
+
+    rows.forEach((row, idx) => {
+      let tr = document.createElement('tr');
+      let tdNum = document.createElement('td'); tdNum.className = 'dt-num'; tdNum.textContent = row.rowNum + '.';
+      let tdP1 = document.createElement('td');
+      let tdP2 = document.createElement('td');
+
+      row.p1.forEach(n => {
+        let lbl = dtLabelStr(n, sp); if (!lbl) return;
+        let tok = document.createElement('span'); tok.className = 'dt-tok' + (n.cap > 0 ? ' cap' : '');
+        tok.textContent = lbl;
+        tok.onclick = () => {
+          function findByBoard(node, bstr) {
+            if (JSON.stringify(node.board) === bstr) return node;
+            for (let c of node.children) { let f = findByBoard(c, bstr); if (f) return f; }
+            return null;
+          }
+          let bstr = JSON.stringify(n.board);
+          let live = findByBoard(root, bstr);
+          if (live) { cur = live; render(); closeDebutTree(); return; }
+          loadSave(g.id);
+          setTimeout(() => {
+            let found = findByBoard(root, bstr);
+            if (found) { cur = found; render(); }
+            closeDebutTree();
+          }, 80);
+        };
+        tdP1.appendChild(tok);
+      });
+
+      row.p2.forEach(n => {
+        let lbl = dtLabelStr(n, sp); if (!lbl) return;
+        let tok = document.createElement('span'); tok.className = 'dt-tok p1' + (n.cap > 0 ? ' cap' : '');
+        tok.textContent = lbl;
+        tok.onclick = () => {
+          function findByBoard(node, bstr) {
+            if (JSON.stringify(node.board) === bstr) return node;
+            for (let c of node.children) { let f = findByBoard(c, bstr); if (f) return f; }
+            return null;
+          }
+          let bstr = JSON.stringify(n.board);
+          let live = findByBoard(root, bstr);
+          if (live) { cur = live; render(); closeDebutTree(); return; }
+          loadSave(g.id);
+          setTimeout(() => {
+            let found = findByBoard(root, bstr);
+            if (found) { cur = found; render(); }
+            closeDebutTree();
+          }, 80);
+        };
+        tdP2.appendChild(tok);
+      });
+
+      tr.appendChild(tdNum); tr.appendChild(tdP1); tr.appendChild(tdP2);
+      tbody.appendChild(tr);
+    });
+
+    tbl.appendChild(tbody);
+    section.appendChild(tbl);
+
+    let wrapper = document.createElement('tr');
+    let td2 = document.createElement('td'); td2.style.padding = '12px';
+    td2.appendChild(section);
+    wrapper.appendChild(td2);
+    table.appendChild(wrapper);
+  });
+
+  dtScale = 1; document.getElementById('dt-zoom-lbl').textContent = '100%';
+}
+
 </script>
 </body>
 </html>
