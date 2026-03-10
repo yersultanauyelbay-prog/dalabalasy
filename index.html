@@ -661,68 +661,43 @@ function renderBoard(){
   let pp1=document.getElementById('p1-pct'); if(pp1) pp1.textContent=pct1+'%';
 
   // ── Казаны ──
-  if (!boardFlipped) {
-    updateKazan('kazan1','kgrid1','k1', b[13], 'gold');
-    updateKazan('kazan0','kgrid0','k0', b[6],  'blue');
-  } else {
-    updateKazan('kazan1','kgrid1','k1', b[6],  'blue');
-    updateKazan('kazan0','kgrid0','k0', b[13], 'gold');
-  }
+  updateKazan('kazan1','kgrid1','k1', b[13], 'gold');
+  updateKazan('kazan0','kgrid0','k0', b[6],  'blue');
   const lp = cur.lastPos;
-  document.getElementById('kazan1').classList.toggle('mg-last', lp === (boardFlipped ? 6 : 13));
-  document.getElementById('kazan0').classList.toggle('mg-last', lp === (boardFlipped ? 13 : 6));
+  document.getElementById('kazan1').classList.toggle('mg-last', lp === 13);
+  document.getElementById('kazan0').classList.toggle('mg-last', lp === 6);
 
-  // ── Верхний ряд ──
+  // ── P1 ряд (верхний, золотые): 12→7 ──
   let r1 = document.getElementById('row1'); r1.innerHTML='';
   let areas1 = [];
-  let topPits = boardFlipped ? [5,4,3,2,1,0] : [12,11,10,9,8,7];
-  let topCls  = boardFlipped ? 'mg-pit-blue' : 'mg-pit-gold';
-  let topClr  = boardFlipped ? 'blue' : 'gold';
-  let topPlayer = boardFlipped ? 0 : 1;
-  topPits.forEach(i => {
-    let can = !t && p===topPlayer && b[i]>0;
+  for(let i=12; i>=7; i--) {
+    let can = !t && p===1 && b[i]>0;
     let el = document.createElement('div');
-    el.className = `mg-pit ${topCls}${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
+    el.className = `mg-pit mg-pit-gold${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
     if(can) el.onclick = (()=>{ let pit=i; return ()=>pitClick(pit); })();
-    if(cur===root) el.ondblclick = (e)=>{ e.stopPropagation(); swapSides(topPlayer); };
-    if (!boardFlipped) {
-      let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
-      let area = document.createElement('div'); area.className='mg-dot-area';
-      el.appendChild(num); el.appendChild(area);
-    } else {
-      let area = document.createElement('div'); area.className='mg-dot-area';
-      let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
-      el.appendChild(area); el.appendChild(num);
-    }
+    if(cur===root) el.ondblclick = (e)=>{ e.stopPropagation(); swapSides(1); };
+    let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
+    let area = document.createElement('div'); area.className='mg-dot-area';
+    el.appendChild(num); el.appendChild(area);
     r1.appendChild(el);
-    areas1.push({area: el.querySelector('.mg-dot-area'), count:b[i], color:topClr, pit:i});
-  });
+    areas1.push({area, count:b[i], color:'gold', pit:i});
+  }
 
-  // ── Нижний ряд ──
+  // ── P0 ряд (нижний, синие): 0→5 ──
   let r0 = document.getElementById('row0'); r0.innerHTML='';
   let areas0 = [];
-  let botPits = boardFlipped ? [7,8,9,10,11,12] : [0,1,2,3,4,5];
-  let botCls  = boardFlipped ? 'mg-pit-gold' : 'mg-pit-blue';
-  let botClr  = boardFlipped ? 'gold' : 'blue';
-  let botPlayer = boardFlipped ? 1 : 0;
-  botPits.forEach(i => {
-    let can = !t && p===botPlayer && b[i]>0;
+  for(let i=0; i<6; i++) {
+    let can = !t && p===0 && b[i]>0;
     let el = document.createElement('div');
-    el.className = `mg-pit ${botCls}${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
+    el.className = `mg-pit mg-pit-blue${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
     if(can) el.onclick = (()=>{ let pit=i; return ()=>pitClick(pit); })();
-    if(cur===root) el.ondblclick = (e)=>{ e.stopPropagation(); swapSides(botPlayer); };
-    if (!boardFlipped) {
-      let area = document.createElement('div'); area.className='mg-dot-area';
-      let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
-      el.appendChild(area); el.appendChild(num);
-    } else {
-      let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
-      let area = document.createElement('div'); area.className='mg-dot-area';
-      el.appendChild(num); el.appendChild(area);
-    }
+    if(cur===root) el.ondblclick = (e)=>{ e.stopPropagation(); swapSides(0); };
+    let area = document.createElement('div'); area.className='mg-dot-area';
+    let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
+    el.appendChild(area); el.appendChild(num);
     r0.appendChild(el);
-    areas0.push({area: el.querySelector('.mg-dot-area'), count:b[i], color:botClr, pit:i});
-  });
+    areas0.push({area, count:b[i], color:'blue', pit:i});
+  }
 
   // ── Рисуем шарики после layout ──
   const lastPos = cur.lastPos;
