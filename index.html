@@ -310,7 +310,9 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
     <button class="action-btn btn-tree" onclick="openPanel('tree')">🌿</button>
     <button class="action-btn btn-save" onclick="openPanel('save')">💾</button>
     <button class="action-btn btn-save" onclick="openDebutTree()">📖</button>
+    <button class="action-btn" onclick="flipBoard()" style="flex:0 0 44px;width:44px;background:rgba(179,157,250,0.1);color:var(--purple);border:1px solid rgba(179,157,250,0.25);border-radius:50%;" title="Перевернуть доску">⇅</button>
     <button class="action-btn" onclick="openOnlinePanel()" style="flex:0 0 44px;width:44px;background:rgba(61,219,133,0.1);color:var(--green);border:1px solid rgba(61,219,133,0.25);border-radius:50%;">🌐</button>
+    <button id="resign-btn" class="action-btn" onclick="resignGame()" style="display:none;flex:0 0 44px;width:44px;background:rgba(255,92,92,0.1);color:var(--red);border:1px solid rgba(255,92,92,0.25);border-radius:50%;" title="Сдаться">🏳</button>
   </div>
 
   </div><!-- end main-col -->
@@ -322,7 +324,9 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
     <div class="side-btn blue" onclick="openPanel('tree')">🌿</div>
     <div class="side-btn gold" onclick="openPanel('save')">💾</div>
     <div class="side-btn" onclick="openDebutTree()">📖</div>
+    <div class="side-btn" onclick="flipBoard()" style="color:var(--purple)">⇅</div>
     <div class="side-btn green" onclick="openOnlinePanel()">🌐</div>
+    <div id="resign-btn-side" class="side-btn" onclick="resignGame()" style="display:none;color:var(--red)">🏳</div>
     <div class="side-btn" onclick="openPanel('menu')">☰</div>
   </div>
 </div>
@@ -789,49 +793,68 @@ function renderBoard(){
   let pp1=document.getElementById('p1-pct'); if(pp1) pp1.textContent=pct1+'%';
 
   // ── Казаны ──
-  updateKazan('kazan1','kgrid1','k1', b[13], 'gold');
-  updateKazan('kazan0','kgrid0','k0', b[6],  'blue');
+  if (!boardFlipped) {
+    updateKazan('kazan1','kgrid1','k1', b[13], 'gold');
+    updateKazan('kazan0','kgrid0','k0', b[6],  'blue');
+  } else {
+    updateKazan('kazan1','kgrid1','k1', b[6],  'blue');
+    updateKazan('kazan0','kgrid0','k0', b[13], 'gold');
+  }
   const lp = cur.lastPos;
-  document.getElementById('kazan1').classList.toggle('mg-last', lp === 13);
-  document.getElementById('kazan0').classList.toggle('mg-last', lp === 6);
+  document.getElementById('kazan1').classList.toggle('mg-last', lp === (boardFlipped ? 6 : 13));
+  document.getElementById('kazan0').classList.toggle('mg-last', lp === (boardFlipped ? 13 : 6));
 
-  // ── P1 ряд (верхний): 12→7 ──
+  // ── Верхний ряд ──
   let r1 = document.getElementById('row1'); r1.innerHTML='';
   let areas1 = [];
-  let color1 = 'gold', color0 = 'blue';
-  let cls1 = 'mg-pit-gold', cls0 = 'mg-pit-blue';
-  for(let i=12; i>=7; i--) {
-    let can = !t && p===1 && b[i]>0;
+  let topPits = boardFlipped ? [5,4,3,2,1,0] : [12,11,10,9,8,7];
+  let topCls  = boardFlipped ? 'mg-pit-blue' : 'mg-pit-gold';
+  let topClr  = boardFlipped ? 'blue' : 'gold';
+  let topPlayer = boardFlipped ? 0 : 1;
+  topPits.forEach(i => {
+    let can = !t && p===topPlayer && b[i]>0;
     let el = document.createElement('div');
-    el.className = `mg-pit ${cls1}${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
+    el.className = `mg-pit ${topCls}${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
     if(can) el.onclick = (()=>{ let pit=i; return ()=>pitClick(pit); })();
-    if(cur === root) {
-      el.ondblclick = (e)=>{ e.stopPropagation(); swapSides(1); };
+    if(cur===root) el.ondblclick = (e)=>{ e.stopPropagation(); swapSides(topPlayer); };
+    if (!boardFlipped) {
+      let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
+      let area = document.createElement('div'); area.className='mg-dot-area';
+      el.appendChild(num); el.appendChild(area);
+    } else {
+      let area = document.createElement('div'); area.className='mg-dot-area';
+      let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
+      el.appendChild(area); el.appendChild(num);
     }
-    let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
-    let area = document.createElement('div'); area.className='mg-dot-area';
-    el.appendChild(num); el.appendChild(area);
     r1.appendChild(el);
-    areas1.push({area, count:b[i], color:color1, pit:i});
-  }
+    areas1.push({area: el.querySelector('.mg-dot-area'), count:b[i], color:topClr, pit:i});
+  });
 
-  // ── P0 ряд (нижний): 0→5 ──
+  // ── Нижний ряд ──
   let r0 = document.getElementById('row0'); r0.innerHTML='';
   let areas0 = [];
-  for(let i=0; i<6; i++) {
-    let can = !t && p===0 && b[i]>0;
+  let botPits = boardFlipped ? [7,8,9,10,11,12] : [0,1,2,3,4,5];
+  let botCls  = boardFlipped ? 'mg-pit-gold' : 'mg-pit-blue';
+  let botClr  = boardFlipped ? 'gold' : 'blue';
+  let botPlayer = boardFlipped ? 1 : 0;
+  botPits.forEach(i => {
+    let can = !t && p===botPlayer && b[i]>0;
     let el = document.createElement('div');
-    el.className = `mg-pit ${cls0}${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
+    el.className = `mg-pit ${botCls}${b[i]===0?' mg-empty':''}${lp===i?' mg-last':''}${cur.move===i?' mg-source':''}${!can?' mg-disabled':''}`;
     if(can) el.onclick = (()=>{ let pit=i; return ()=>pitClick(pit); })();
-    if(cur === root) {
-      el.ondblclick = (e)=>{ e.stopPropagation(); swapSides(0); };
+    if(cur===root) el.ondblclick = (e)=>{ e.stopPropagation(); swapSides(botPlayer); };
+    if (!boardFlipped) {
+      let area = document.createElement('div'); area.className='mg-dot-area';
+      let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
+      el.appendChild(area); el.appendChild(num);
+    } else {
+      let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
+      let area = document.createElement('div'); area.className='mg-dot-area';
+      el.appendChild(num); el.appendChild(area);
     }
-    let area = document.createElement('div'); area.className='mg-dot-area';
-    let num = document.createElement('div'); num.className='mg-pit-num'; num.textContent=b[i];
-    el.appendChild(area); el.appendChild(num);
     r0.appendChild(el);
-    areas0.push({area, count:b[i], color:color0, pit:i});
-  }
+    areas0.push({area: el.querySelector('.mg-dot-area'), count:b[i], color:botClr, pit:i});
+  });
 
   // ── Рисуем шарики после layout ──
   const lastPos = cur.lastPos;
@@ -1062,7 +1085,11 @@ function showWin(b){
 function closeWin(){ document.getElementById('win-overlay').classList.remove('show'); }
 function saveFromWin(){ let name=document.getElementById('win-save-name').value.trim(); let result=document.getElementById('win-score').textContent; if(!name)name=`Game ${new Date().toLocaleDateString()} ${result}`; let saves=getSaves(); let id=Date.now(); saves[id]={id,name,note:result,score:`${cur.board[6]}-${cur.board[13]}`,date:new Date().toLocaleDateString()+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),startPlayer:root.player,curId:cur.id,tree:serializeTree(root)}; localStorage.setItem('mg_saves',JSON.stringify(saves)); document.getElementById('win-save-name').value=''; closeWin(); }
 
-let touchY=0;
+let boardFlipped = false;
+function flipBoard() {
+  boardFlipped = !boardFlipped;
+  render();
+}
 document.querySelectorAll('.panel').forEach(p=>{ p.addEventListener('touchstart',e=>touchY=e.touches[0].clientY,{passive:true}); p.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-touchY>60)closePanel();},{passive:true}); });
 
 newGame();
@@ -1209,6 +1236,9 @@ window.joinRoom = async function() {
   startOnlineGame(room);
   showOnlineScreen('game-info');
   updateGameInfo();
+  document.getElementById('resign-btn').style.display = '';
+  let rs2 = document.getElementById('resign-btn-side'); if(rs2) rs2.style.display='';
+  if (onlineState.myRole === 'p1' && !boardFlipped) { boardFlipped=true; }
   listenRoom(roomId);
 };
 
@@ -1245,18 +1275,22 @@ function listenRoom(roomId) {
       updateGameInfo();
       closeOnlinePanel();
       showMsg('🎮 ' + room.guest.nick + ' присоединился!');
+      document.getElementById('resign-btn').style.display = '';
+      let rs = document.getElementById('resign-btn-side'); if(rs) rs.style.display='';
+      if (onlineState.myRole === 'p1' && !boardFlipped) { boardFlipped=true; }
     }
 
     // Синхронизация дерева
-    if (onlineState.gameStarted && room.tree) {
-      let remoteTree = deserializeTree(room.tree, null);
-      // Только если это не наш ход
+    if (onlineState.gameStarted && room.tree && onlineState.uid) {
+      // Применяем только ходы соперника
       if (room.lastMoveBy && room.lastMoveBy !== onlineState.uid) {
+        let remoteTree = deserializeTree(room.tree, null);
         root = remoteTree;
         function findNode(node, tid) { if(node.id===tid)return node; for(let c of node.children){let f=findNode(c,tid);if(f)return f;} return null; }
         cur = findNode(root, room.curId) || root;
         render();
         updateGameInfo();
+        showMsg('♟ Соперник походил');
       }
     }
 
@@ -1304,55 +1338,26 @@ function startOnlineGame(room) {
   }, 10000);
 }
 
-// ── OVERRIDE pitClick FOR ONLINE ──
-let _origPitClick = window.pitClick || null;
-window.pitClickOnline = function(pit) {
-  if (!onlineState.gameStarted) { pitClick(pit); return; }
-  if (!isMyTurn()) { showMsg('Не твой ход!'); return; }
-  pitClick(pit);
-  // Синхронизируем дерево
-  update(ref(db, 'rooms/'+onlineState.roomId), {
-    tree: serializeTree(root),
-    curId: cur.id,
-    turn: cur.player,
-    lastMoveBy: onlineState.uid,
-    lastMoveAt: serverTimestamp()
-  });
-  updateGameInfo();
-  // Автосохранение если игра закончена
-  if (terminal(cur.board)) autoSaveOnlineGame();
-};
+// pitClick перехвачен ниже
 
-// Патчим все клики на ямки
-function patchPitClicks() {
-  document.querySelectorAll('.mg-pit').forEach(el => {
-    let oldClick = el.onclick;
-    if (oldClick) {
-      el.onclick = (e) => {
-        if (onlineState.gameStarted && !isMyTurn()) { showMsg('Не твой ход!'); return; }
-        oldClick(e);
-        if (onlineState.gameStarted) {
-          update(ref(db, 'rooms/'+onlineState.roomId), {
-            tree: serializeTree(root),
-            curId: cur.id,
-            turn: cur.player,
-            lastMoveBy: onlineState.uid,
-            lastMoveAt: serverTimestamp()
-          });
-          updateGameInfo();
-          if (terminal(cur.board)) autoSaveOnlineGame();
-        }
-      };
-    }
-  });
-}
-
-// Перехватываем render чтобы патчить после каждого рендера
-let _origRender = window.render;
-window.render = function() {
-  _origRender();
+// Перехватываем pitClick для онлайн режима
+let _basePitClick = pitClick;
+window.pitClick = function(pit) {
   if (onlineState.gameStarted) {
-    setTimeout(patchPitClicks, 50);
+    if (!onlineState.uid) { showMsg('Подключение...'); return; }
+    if (!isMyTurn()) { showMsg('Не твой ход!'); return; }
+  }
+  _basePitClick(pit);
+  if (onlineState.gameStarted) {
+    update(ref(db, 'rooms/'+onlineState.roomId), {
+      tree: serializeTree(root),
+      curId: cur.id,
+      turn: cur.player,
+      lastMoveBy: onlineState.uid,
+      lastMoveAt: serverTimestamp()
+    });
+    updateGameInfo();
+    if (terminal(cur.board)) autoSaveOnlineGame();
   }
 };
 
@@ -1579,7 +1584,33 @@ window.saveNickAndContinue = function() {
   }
 };
 
-window.showMsg = function(txt) {
+window.resignGame = async function() {
+  if (!onlineState.gameStarted) return;
+  if (!confirm('Сдаться? Соперник получит победу.')) return;
+  // Засчитываем все шары сопернику
+  let nb = [...cur.board];
+  let myKazan = myPlayer() === 0 ? 6 : 13;
+  let oppKazan = myPlayer() === 0 ? 13 : 6;
+  let myPits = myPlayer() === 0 ? [0,1,2,3,4,5] : [7,8,9,10,11,12];
+  myPits.forEach(i => { nb[oppKazan] += nb[i]; nb[i] = 0; });
+  let node = mkNode(nb, cur.player, cur, null, false, 0);
+  node.done = true;
+  cur.children.push(node);
+  cur = node;
+  await update(ref(db, 'rooms/'+onlineState.roomId), {
+    tree: serializeTree(root),
+    curId: cur.id,
+    turn: cur.player,
+    lastMoveBy: onlineState.uid,
+    resigned: onlineState.uid
+  });
+  render();
+  autoSaveOnlineGame();
+  showMsg('🏳 Вы сдались');
+  document.getElementById('resign-btn').style.display = 'none';
+  let s = document.getElementById('resign-btn-side');
+  if (s) s.style.display = 'none';
+};
   let el = document.getElementById('msg-toast');
   if (!el) return;
   el.textContent = txt;
