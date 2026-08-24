@@ -22,32 +22,64 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
 /* ── LAYOUT ── */
 .app { width:100vw; min-height:100vh; display:flex; flex-direction:column; position:relative; }
 
+.tree-dock { display:none; }
+
 @media (orientation:portrait) {
   html,body { overflow:hidden; height:100%; }
   .app { width:100vw; height:100vh; height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
+  .main-col { flex:1; min-height:0; min-width:0; display:flex; flex-direction:column; }
   .topbar { padding:8px 12px 4px; flex-shrink:0; }
   .score-pill { gap:6px; padding:4px 10px; }
   .score-num { font-size:18px; }
   .score-dot { width:7px; height:7px; }
   .turn-pill { font-size:9px; padding:3px 7px; }
-  .path-bar { font-size:9px; padding:2px 12px; }
-  .board-wrap { flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center; padding:4px 8px; }
-  .board { padding:10px 8px; border-radius:16px; width:100%; box-sizing:border-box; }
+  .path-bar { display:none !important; height:0 !important; padding:0 !important; margin:0 !important; overflow:hidden !important; }
+  .board-wrap { flex:1; min-height:0; display:flex; flex-direction:column; justify-content:flex-end; padding:4px 8px 0; }
+  .board { padding:10px 8px 6px; border-radius:16px; width:100%; box-sizing:border-box; }
   .pits-row { gap:3px; margin:2px 0; }
   .middle-row { margin:4px 0; gap:4px; }
-  .bottombar { flex-shrink:0; padding:6px 10px env(safe-area-inset-bottom,8px); gap:6px; display:flex; align-items:center; justify-content:center; }
+  .bottombar { flex-shrink:0; padding:6px 10px 6px; gap:6px; display:flex; align-items:center; justify-content:center; }
   .action-btn { height:44px; font-size:12px; border-radius:12px; flex:1; }
-  .btn-save,.btn-tree { flex:0 0 44px; width:44px; padding:0; font-size:18px; }
+  .btn-save,.btn-tree,.btn-play,.btn-share { flex:0 0 44px; width:44px; padding:0; font-size:18px; }
   .side-col { display:none !important; }
   .turn-compact { display:none !important; }
   .scores { display:flex; }
+  .play-bar { padding:4px 8px; }
+  .play-btn { height:30px; font-size:10px; min-width:32px; }
+  .tree-dock {
+    display:flex !important;
+    flex-direction:column;
+    flex:0 0 26vh;
+    height:26vh;
+    min-height:110px;
+    max-height:30vh;
+    margin:0 8px;
+    padding:4px 8px env(safe-area-inset-bottom,8px);
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-bottom:none;
+    border-radius:12px 12px 0 0;
+    overflow:hidden;
+  }
+  .tree-dock-head {
+    flex-shrink:0;
+    font-family:'Syne',sans-serif;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1.5px;
+    color:var(--muted);
+    padding:2px 0 4px;
+  }
+  .tree-dock-body { flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  .tree-dock-body .game-table { font-size:12px; }
+  .tree-dock-body .game-table th, .tree-dock-body .game-table td { padding:4px 6px; }
 }
 
 @media (orientation:landscape) {
   html,body { height:auto; overflow-y:auto; }
   .app { flex-direction:row; min-height:100vh; align-items:stretch; }
   .main-col { flex:1; min-width:0; display:flex; flex-direction:column; }
-  .topbar,.path-bar,.bottombar,.scores,.turn-compact,.topbar-score,.score-pill,.turn-pill,.menu-btn { display:none !important; visibility:hidden !important; height:0 !important; overflow:hidden !important; padding:0 !important; margin:0 !important; }
+  .topbar,.path-bar,.bottombar,.scores,.turn-compact,.topbar-score,.score-pill,.turn-pill,.menu-btn,.tree-dock { display:none !important; visibility:hidden !important; height:0 !important; overflow:hidden !important; padding:0 !important; margin:0 !important; }
   .board-wrap { flex:1; min-width:0; padding:4px 6px; display:flex; flex-direction:column; justify-content:center; }
   .board { padding:6px 6px 4px; width:100%; box-sizing:border-box; }
   .pits-row { gap:0; margin:0; }
@@ -60,6 +92,7 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
   .side-btn.blue { color:var(--blue); border-color:rgba(91,163,255,0.25); background:rgba(91,163,255,0.08); }
   .side-btn.green { color:var(--green); border-color:rgba(61,219,133,0.25); background:rgba(61,219,133,0.08); }
   .turn-compact { display:none !important; }
+  .play-bar { padding:3px 6px; }
 }
 
 .turn-compact { display:none; }
@@ -156,6 +189,42 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
 .btn-undo:active { background:var(--bg3); }
 .btn-save { width:40px; background:rgba(232,192,90,0.1); color:var(--gold); border-color:rgba(232,192,90,0.25); border-radius:50%; }
 .btn-tree { width:40px; background:rgba(91,163,255,0.1); color:var(--blue); border-color:rgba(91,163,255,0.25); border-radius:50%; }
+.btn-play { width:40px; background:rgba(61,219,133,0.1); color:var(--green); border-color:rgba(61,219,133,0.25); border-radius:12px; }
+.btn-share { width:40px; background:rgba(179,157,250,0.1); color:var(--purple); border-color:rgba(179,157,250,0.25); border-radius:12px; }
+
+/* ── PLAYBACK BAR (shown only while playing / paused) ── */
+.play-bar {
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 8px 6px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.play-bar.show { display: flex; }
+.play-btn {
+  height: 32px;
+  min-width: 36px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.play-btn:active { transform: scale(0.95); background: var(--bg); }
+.play-btn.active {
+  color: var(--gold);
+  border-color: rgba(232,192,90,0.4);
+  background: rgba(232,192,90,0.12);
+}
+.play-btn.stop { color: var(--red); border-color: rgba(255,92,92,0.25); background: rgba(255,92,92,0.08); }
 
 /* ── PANELS ── */
 .panel-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:50; backdrop-filter:blur(4px); }
@@ -183,6 +252,7 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
 .pill-btn:active { opacity:0.7; }
 .pill-btn.load { background:rgba(91,163,255,0.1); color:var(--blue); border-color:rgba(91,163,255,0.25); }
 .pill-btn.del  { background:rgba(255,92,92,0.1);  color:var(--red);  border-color:rgba(255,92,92,0.25); }
+.pill-btn.share { background:rgba(179,157,250,0.1); color:var(--purple); border-color:rgba(179,157,250,0.25); }
 .game-table { width:100%; border-collapse:collapse; font-family:'IBM Plex Mono',monospace; font-size:13px; }
 .game-table th { text-align:left; padding:6px 10px; font-size:10px; letter-spacing:2px; color:var(--muted); border-bottom:1px solid var(--border); }
 .game-table th.p0h { color:var(--text); }
@@ -205,7 +275,7 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
 .win-card { background:var(--bg2); border:1px solid var(--border); border-radius:24px; padding:36px 28px; text-align:center; width:300px; }
 .win-title { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; margin-bottom:6px; }
 .win-score { font-family:'Syne',sans-serif; font-size:48px; font-weight:800; color:var(--gold); margin:12px 0; }
-.win-btns { display:flex; gap:8px; justify-content:center; margin-top:16px; }
+.win-btns { display:flex; gap:8px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
 .win-btn { padding:12px 20px; border-radius:12px; font-family:'Syne',sans-serif; font-size:13px; font-weight:700; cursor:pointer; border:1px solid; }
 .win-btn.primary { background:var(--gold); color:#000; border-color:var(--gold); }
 .win-btn.ghost { background:transparent; color:var(--text); border-color:var(--border); }
@@ -216,12 +286,29 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
 
 /* ── RESPONSIVE PORTRAIT ── */
 @media (orientation:portrait) {
+  .pits-row { justify-content: center; flex:none; margin:0; }
   .mg-pit {
-    width: calc((100vw - 52px - 4px - 5*3px) / 6);
+    width: 44px;
+    flex: 0 0 44px;
     height: calc(((100vw - 52px - 4px - 5*3px) / 6) * 2.2);
+    padding: 0 2px;
   }
   .mg-kazan { width:44px; }
   .mg-pit-num { font-size:clamp(20px, 6vw, 34px); }
+  .topbar { padding:8px 12px 2px; }
+  .board-wrap { flex:0 0 auto; justify-content:flex-start; padding:0 8px 0; }
+  .board { padding:8px 8px 2px; border-radius:16px; }
+  .middle-row { margin:0; }
+  .middle-center { flex:none; gap:3px; justify-content:flex-start; }
+  .bottombar { padding:0 10px 4px; }
+  .tree-dock {
+    display:flex !important;
+    flex-direction:column;
+    flex:1 1 auto;
+    height:auto;
+    min-height:110px;
+    max-height:none;
+  }
 }
 
 /* ── RESPONSIVE LANDSCAPE ── */
@@ -269,6 +356,18 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
   <!-- Path -->
   <div class="path-bar" id="path-bar">Root</div>
 
+  <!-- Playback (hidden until ▶) -->
+  <div id="play-bar" class="play-bar">
+    <button class="play-btn" id="play-rew" onclick="playRewind()">◀◀</button>
+    <button class="play-btn" id="play-toggle" onclick="togglePlay()">▶</button>
+    <button class="play-btn" id="play-fwd" onclick="playForward()">▶▶</button>
+    <button class="play-btn" data-speed="0.5" onclick="setPlaySpeed(0.5)">0.5x</button>
+    <button class="play-btn" data-speed="1" onclick="setPlaySpeed(1)">1x</button>
+    <button class="play-btn" data-speed="1.5" onclick="setPlaySpeed(1.5)">1.5x</button>
+    <button class="play-btn" data-speed="2" onclick="setPlaySpeed(2)">2x</button>
+    <button class="play-btn stop" onclick="haltPlay()">■</button>
+  </div>
+
   <!-- Board -->
   <div class="board-wrap">
     <div class="turn-compact">
@@ -307,9 +406,16 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
   <div class="bottombar">
     <button class="action-btn btn-undo" onclick="undoMove()">← UNDO</button>
     <button class="action-btn btn-undo" onclick="forwardMove()">→ FWD</button>
+    <button class="action-btn btn-play" id="btn-play" onclick="togglePlay()">▶</button>
     <button class="action-btn btn-tree" onclick="openPanel('tree')">🌿</button>
     <button class="action-btn btn-save" onclick="openPanel('save')">💾</button>
     <button class="action-btn btn-save" onclick="openDebutTree()">📖</button>
+    <button class="action-btn btn-share" onclick="shareDebut()">↗</button>
+  </div>
+
+  <div id="tree-dock" class="tree-dock">
+    <div class="tree-dock-head">MOVE TREE</div>
+    <div id="tree-dock-body" class="tree-dock-body"></div>
   </div>
 
   </div><!-- end main-col -->
@@ -318,9 +424,11 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
   <div class="side-col">
     <div class="side-btn" onclick="undoMove()">←</div>
     <div class="side-btn" onclick="forwardMove()">→</div>
+    <div class="side-btn green" id="btn-play-side" onclick="togglePlay()">▶</div>
     <div class="side-btn blue" onclick="openPanel('tree')">🌿</div>
     <div class="side-btn gold" onclick="openPanel('save')">💾</div>
     <div class="side-btn" onclick="openDebutTree()">📖</div>
+    <div class="side-btn" onclick="shareDebut()">↗</div>
     <div class="side-btn" onclick="openPanel('menu')">☰</div>
   </div>
 </div>
@@ -341,8 +449,21 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
       <div class="menu-icon" style="background:rgba(232,192,90,0.1);color:var(--gold)">📂</div>
       <div class="menu-text"><b>Saved Positions</b><span id="saves-count">0 saved</span></div>
     </div>
+    <div class="menu-item" onclick="exportBackup();closePanel()">
+      <div class="menu-icon" style="background:rgba(61,219,133,0.1);color:var(--green)">⬇</div>
+      <div class="menu-text"><b>Export backup</b><span>Файл на телефон — не пропадёт годами</span></div>
+    </div>
+    <div class="menu-item" onclick="document.getElementById('backup-file').click()">
+      <div class="menu-icon" style="background:rgba(91,163,255,0.1);color:var(--blue)">⬆</div>
+      <div class="menu-text"><b>Import backup</b><span>Вернуть партии из файла</span></div>
+    </div>
+    <div class="menu-item" onclick="shareDebut();closePanel()">
+      <div class="menu-icon" style="background:rgba(179,157,250,0.1);color:var(--purple)">↗</div>
+      <div class="menu-text"><b>Share debut</b><span>Таблица ходов как в дереве</span></div>
+    </div>
   </div>
 </div>
+<input type="file" id="backup-file" accept="application/json,.json" style="display:none" onchange="importBackupFile(this)"/>
 
 <!-- SAVE PANEL -->
 <div class="panel" id="panel-save">
@@ -366,7 +487,10 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
 <!-- TREE PANEL -->
 <div class="panel" id="panel-tree">
   <div class="panel-handle"></div>
-  <div class="panel-title">MOVE TREE <span id="tree-cnt" style="font-size:12px;color:var(--muted);font-family:'IBM Plex Mono'"></span></div>
+  <div class="panel-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+    <span>MOVE TREE <span id="tree-cnt" style="font-size:12px;color:var(--muted);font-family:'IBM Plex Mono'"></span></span>
+    <button class="pill-btn share" onclick="shareDebut()">↗ SHARE</button>
+  </div>
   <div class="panel-body" style="display:flex;flex-direction:column;height:100%">
     <div style="display:flex;flex-direction:row;gap:0;flex:1;min-height:0;overflow:hidden">
       <div style="flex:1;min-width:0;display:flex;flex-direction:column;border-right:2px solid var(--border)">
@@ -396,6 +520,7 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
       <button onclick="dtZoom(-1)" style="width:30px;height:30px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:16px;font-weight:700;cursor:pointer">−</button>
       <span id="dt-zoom-lbl" style="font-size:11px;color:var(--muted);min-width:36px;text-align:center">100%</span>
       <button onclick="dtZoom(1)" style="width:30px;height:30px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:16px;font-weight:700;cursor:pointer">+</button>
+      <button onclick="shareDebut()" style="width:30px;height:30px;border-radius:7px;background:rgba(179,157,250,0.12);border:1px solid rgba(179,157,250,0.25);color:var(--purple);font-size:14px;font-weight:700;cursor:pointer">↗</button>
       <button onclick="closeDebutTree()" style="width:30px;height:30px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:14px;cursor:pointer">✕</button>
     </div>
   </div>
@@ -441,6 +566,7 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
     <input class="save-input" id="win-save-name" placeholder="Save this game..." style="margin-bottom:8px"/>
     <div class="win-btns">
       <button class="win-btn primary" onclick="saveFromWin()">💾 SAVE</button>
+      <button class="win-btn ghost" onclick="shareDebut()">↗ SHARE</button>
       <button class="win-btn ghost" onclick="newGame();closeWin()">NEW GAME</button>
       <button class="win-btn ghost" onclick="closeWin()">ANALYZE</button>
     </div>
@@ -453,6 +579,9 @@ html, body { width:100%; background:var(--bg); color:var(--text); font-family:'I
 // ============================================================
 let root = null, cur = null, nodeId = 0;
 let frozenTreeRows = null;
+let playTimer = null;
+let playSpeed = 1;
+let playDir = 1;
 
 function mkNode(board, player, parent, move, extra, cap) {
   return { id:nodeId++, board:[...board], player, parent, move, extra:extra||false,
@@ -502,6 +631,7 @@ function winner(b){
 // GAME ACTIONS
 // ============================================================
 function newGame(){
+  haltPlay();
   frozenTreeRows = null;
   sidesSwapped = false;
   let b=Array(14).fill(4);b[6]=0;b[13]=0;
@@ -515,6 +645,7 @@ function newGame(){
 // Смена кто начинает — только на первом ходу
 let sidesSwapped = false;
 function swapSides(startPlayer){
+  haltPlay();
   sidesSwapped = (startPlayer === 1);
   let b=Array(14).fill(4);b[6]=0;b[13]=0;
   nodeId=0;
@@ -528,52 +659,143 @@ function swapSides(startPlayer){
   setTimeout(()=>msg.remove(), 1500);
 }
 
-function forwardMove(){
-  if(!cur||cur.children.length===0)return;
+function promotePath(node){
+  while(node && node.parent){
+    let p = node.parent;
+    p.lastVisited = node;
+    let i = p.children.indexOf(node);
+    if(i > 0){ p.children.splice(i, 1); p.children.unshift(node); }
+    node = p;
+  }
+}
+
+function goForward(){
+  if(!cur||cur.children.length===0)return false;
   let next = cur.lastVisited && cur.children.includes(cur.lastVisited)
     ? cur.lastVisited : cur.children[0];
-  cur=next; render();
+  cur=next;
+  promotePath(cur);
+  render();
+  return true;
 }
-function undoMove(){ if(!cur||!cur.parent)return; cur.parent.lastVisited=cur; cur=cur.parent; render(); }
+function goBack(){
+  if(!cur||!cur.parent)return false;
+  cur.parent.lastVisited=cur; cur=cur.parent; render();
+  return true;
+}
+function forwardMove(){ stopPlay(true); goForward(); }
+function undoMove(){ stopPlay(true); goBack(); }
 function markDone(){ cur.done=!cur.done; render(); }
+
+function playDelay(){ return Math.round(700 / playSpeed); }
+
+function playStep(){
+  let ok = playDir===1 ? goForward() : goBack();
+  if(!ok) stopPlay(true);
+}
+
+function startPlay(dir){
+  playDir = dir;
+  if(playTimer){ clearInterval(playTimer); playTimer=null; }
+  let bar=document.getElementById('play-bar');
+  if(bar) bar.classList.add('show');
+  playTimer = setInterval(playStep, playDelay());
+  syncPlayUI();
+}
+
+function stopPlay(keepBar){
+  if(playTimer){ clearInterval(playTimer); playTimer=null; }
+  if(!keepBar){
+    let bar=document.getElementById('play-bar');
+    if(bar) bar.classList.remove('show');
+  }
+  syncPlayUI();
+}
+
+function haltPlay(){ stopPlay(false); }
+
+function togglePlay(){
+  if(playTimer) stopPlay(true);
+  else startPlay(1);
+}
+
+function playForward(){ startPlay(1); }
+function playRewind(){ startPlay(-1); }
+
+function setPlaySpeed(s){
+  playSpeed = s;
+  if(playTimer) startPlay(playDir);
+  else syncPlayUI();
+}
+
+function syncPlayUI(){
+  let playing = !!playTimer;
+  let icon = playing ? '❚❚' : '▶';
+  let bp=document.getElementById('btn-play');
+  let bs=document.getElementById('btn-play-side');
+  let pt=document.getElementById('play-toggle');
+  if(bp) bp.textContent = icon;
+  if(bs) bs.textContent = icon;
+  if(pt) pt.textContent = icon;
+  document.querySelectorAll('[data-speed]').forEach(b=>{
+    b.classList.toggle('active', Number(b.dataset.speed)===playSpeed);
+  });
+  let rw=document.getElementById('play-rew');
+  let fw=document.getElementById('play-fwd');
+  if(rw) rw.classList.toggle('active', playing && playDir===-1);
+  if(fw) fw.classList.toggle('active', playing && playDir===1);
+}
 
 function pitClick(pit){
   if(!cur)return;
+  haltPlay();
   let b=cur.board, p=cur.player;
   if(!moves(b,p).includes(pit))return;
   let ex=cur.children.find(c=>c.move===pit);
-  if(ex){cur.lastVisited=ex; cur=ex;render();return;}
+  if(ex){ cur=ex; promotePath(cur); render(); return; }
   let r=applyMove(b,pit,p);
   if(!r)return;
   let np=r.extra?p:1-p;
   let node=mkNode(r.board,np,cur,pit,r.extra,r.cap);
   node.lastPos=r.lastPos;
   cur.children.push(node);
-  cur.lastVisited=node;
   cur=node;
+  promotePath(cur);
   render();
   if(terminal(r.board))showWin(r.board);
 }
 
-function saveNodeNote(){ if(cur) cur.note=document.getElementById('tree-note').value; }
+function saveNodeNote(){ if(cur){ cur.note=document.getElementById('tree-note').value; persistSessionSoon(); } }
 
 // ============================================================
 // RENDER
 // ============================================================
-function render(){ if(!cur)return; renderBoard(); renderPath(); renderStats(); }
+function render(){ if(!cur)return; renderBoard(); renderPath(); renderStats(); renderTreeDock(); persistSessionSoon(); }
+
+function pitBallSize(){
+  if(!window.matchMedia('(orientation: portrait)').matches) return 20;
+  const d = document.querySelector('.mg-kdot');
+  if(d){
+    const w = d.getBoundingClientRect().width;
+    if(w > 4) return Math.round(w);
+  }
+  return 20;
+}
 
 // ── drawBalls: точно из preview.html ──
 function drawBalls(area, count, color, markLast) {
   area.innerHTML = '';
   const W = area.offsetWidth || 70;
   const H = area.offsetHeight || 110;
-  const D = 20, G = 4, S = D + G;
+  const D = pitBallSize(), G = D <= 16 ? 3 : 4, S = D + G;
+  const portrait = window.matchMedia('(orientation: portrait)').matches;
   const cx = W/2;
   const x0 = cx - S/2 - D/2;
   const x1 = cx + S/2 - D/2;
   const xc = cx - D/2;
-  const shift = 9;
+  const shift = portrait ? Math.round(D * 9 / 20) : 9;
   const bottomY = H - D - 10;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   let main = [], top = [];
 
   if(count <= 8) {
@@ -587,13 +809,23 @@ function drawBalls(area, count, color, markLast) {
       main.push([col===0?x0:x1, bottomY - row*S]);
     }
     const extra = count - 8;
-    const topRow8centerY = bottomY - S*3 + D/2;
-    const top0Y = topRow8centerY - D/2 + 75;
+    const extraRows = Math.ceil(extra / 2);
+    let top0Y;
+    if(portrait) {
+      top0Y = 4 + Math.max(0, extraRows - 1) * S;
+    } else {
+      const topRow8centerY = bottomY - S*3 + D/2;
+      top0Y = topRow8centerY - D/2 + 75;
+    }
     for(let i=0; i<extra; i++) {
       const row = Math.floor(i/2), col = i%2;
       let x = col===0 ? x0+shift : x1+shift;
       let y = top0Y - row*S;
       if(i===extra-1 && extra%2===1) x = xc+shift;
+      if(portrait){
+        x = clamp(x, 0, Math.max(0, W - D));
+        y = clamp(y, 0, Math.max(0, H - D));
+      }
       top.push([x, y]);
     }
   }
@@ -699,6 +931,16 @@ function renderBoard(){
     areas0.push({area, count:b[i], color:'blue', pit:i});
   }
 
+  if(window.matchMedia('(orientation: portrait)').matches){
+    const D = pitBallSize();
+    const G = D <= 16 ? 3 : 4;
+    const w = Math.ceil(2 * D + G + 8);
+    document.querySelectorAll('.mg-pit').forEach(el => {
+      el.style.width = w + 'px';
+      el.style.flex = '0 0 ' + w + 'px';
+    });
+  }
+
   // ── Рисуем шарики после layout ──
   const lastPos = cur.lastPos;
   setTimeout(() => {
@@ -710,12 +952,19 @@ function renderPath(){
   let path=[], n=cur;
   while(n&&n.parent){path.unshift(n);n=n.parent;}
   let el=document.getElementById('path-bar');
+  if(!el) return;
   if(!path.length){el.textContent='Root';return;}
   el.innerHTML=path.map(nd=>{
     let pp=nd.parent.player;
     let lbl=pp===0?nd.move+1:nd.move-6;
     return `<span class="path-step p${pp}">P${pp+1}:${lbl}${nd.extra?'★':''}</span>`;
   }).join('›');
+}
+
+function renderTreeDock(){
+  let body=document.getElementById('tree-dock-body');
+  if(!body || !root) return;
+  buildTreeTable(body, buildMoveRows(root));
 }
 
 function renderStats(){
@@ -848,12 +1097,12 @@ function buildTreeTable(body, rows, isFrozen) {
     let tr = document.createElement('tr'); if (row.future) tr.style.opacity = '0.45';
     let tdNum = document.createElement('td'); tdNum.className = 'td-num'; tdNum.textContent = row.num; tr.appendChild(tdNum);
     let td0 = document.createElement('td'); let cell0 = document.createElement('div'); cell0.className = 'move-cell';
-    row.p0.forEach((m, idx) => { let token = document.createElement('span'); let isCur = row.p0nodes[idx] === cur; token.className = `move-token p0${isCur?' current':''}${m.cap>0?' cap':''}`; token.textContent = `${m.from}${m.to}`; token.onclick = () => { cur = row.p0nodes[idx]; render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell0.appendChild(token); });
-    if (!isFrozen) { row.alts0.forEach(alt => { let token = document.createElement('span'); token.className = 'move-token p0'; token.style.cssText = 'opacity:0.5;border:1px dashed rgba(91,163,255,0.4);background:transparent;font-size:10px;'; token.textContent = `${alt.label.from}${alt.label.to}`; token.onclick = () => { cur = alt.node; render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell0.appendChild(token); }); }
+    row.p0.forEach((m, idx) => { let token = document.createElement('span'); let isCur = row.p0nodes[idx] === cur; token.className = `move-token p0${isCur?' current':''}${m.cap>0?' cap':''}`; token.textContent = `${m.from}${m.to}`; token.onclick = () => { haltPlay(); cur = row.p0nodes[idx]; promotePath(cur); render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell0.appendChild(token); });
+    if (!isFrozen) { row.alts0.forEach(alt => { let token = document.createElement('span'); token.className = 'move-token p0'; token.style.cssText = 'opacity:0.5;border:1px dashed rgba(91,163,255,0.4);background:transparent;font-size:10px;'; token.textContent = `${alt.label.from}${alt.label.to}`; token.onclick = () => { haltPlay(); cur = alt.node; promotePath(cur); render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell0.appendChild(token); }); }
     td0.appendChild(cell0); tr.appendChild(td0);
     let td1 = document.createElement('td'); let cell1 = document.createElement('div'); cell1.className = 'move-cell';
-    row.p1.forEach((m, idx) => { let token = document.createElement('span'); let isCur = row.p1nodes[idx] === cur; token.className = `move-token p1${isCur?' current':''}${m.cap>0?' cap':''}`; token.textContent = `${m.from}${m.to}`; token.onclick = () => { cur = row.p1nodes[idx]; render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell1.appendChild(token); });
-    if (!isFrozen) { row.alts1.forEach(alt => { let token = document.createElement('span'); token.className = 'move-token p1'; token.style.cssText = 'opacity:0.5;border:1px dashed rgba(232,192,90,0.4);background:transparent;font-size:10px;'; token.textContent = `${alt.label.from}${alt.label.to}`; token.onclick = () => { cur = alt.node; render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell1.appendChild(token); }); }
+    row.p1.forEach((m, idx) => { let token = document.createElement('span'); let isCur = row.p1nodes[idx] === cur; token.className = `move-token p1${isCur?' current':''}${m.cap>0?' cap':''}`; token.textContent = `${m.from}${m.to}`; token.onclick = () => { haltPlay(); cur = row.p1nodes[idx]; promotePath(cur); render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell1.appendChild(token); });
+    if (!isFrozen) { row.alts1.forEach(alt => { let token = document.createElement('span'); token.className = 'move-token p1'; token.style.cssText = 'opacity:0.5;border:1px dashed rgba(232,192,90,0.4);background:transparent;font-size:10px;'; token.textContent = `${alt.label.from}${alt.label.to}`; token.onclick = () => { haltPlay(); cur = alt.node; promotePath(cur); render(); document.getElementById('tree-note').value = cur.note || ''; closePanel(); }; cell1.appendChild(token); }); }
     td1.appendChild(cell1); tr.appendChild(td1);
     tbody.appendChild(tr);
   });
@@ -865,37 +1114,182 @@ function countN(n){ return 1+n.children.reduce((a,c)=>a+countN(c),0); }
 // ============================================================
 // SAVE / LOAD
 // ============================================================
+let storageReady = false;
+let persistTimer = null;
+const IDB_NAME = 'mangala_db';
+const IDB_STORE = 'kv';
+
+function idbOpen(){
+  return new Promise((resolve, reject)=>{
+    if(!window.indexedDB){ reject(new Error('no idb')); return; }
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = ()=>{ if(!req.result.objectStoreNames.contains(IDB_STORE)) req.result.createObjectStore(IDB_STORE); };
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+function idbPut(key, val){
+  idbOpen().then(db=>{
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    tx.objectStore(IDB_STORE).put(val, key);
+  }).catch(()=>{});
+}
+function idbGet(key){
+  return idbOpen().then(db=>new Promise((resolve, reject)=>{
+    const tx = db.transaction(IDB_STORE, 'readonly');
+    const req = tx.objectStore(IDB_STORE).get(key);
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  }));
+}
+
 function getSaves(){ try{return JSON.parse(localStorage.getItem('mg_saves')||'{}');}catch{return {};} }
 
-function serializeTree(node){ return { id:node.id, board:node.board, player:node.player, move:node.move, extra:node.extra, cap:node.cap, lastPos:node.lastPos, done:node.done, note:node.note, children:node.children.map(c=>serializeTree(c)) }; }
+function persistSavesObj(saves){
+  try { localStorage.setItem('mg_saves', JSON.stringify(saves)); } catch(e) {}
+  idbPut('saves', saves);
+}
 
-function deserializeTree(data, parent){ let node=mkNode(data.board,data.player,parent,data.move,data.extra,data.cap); node.lastPos=data.lastPos; node.done=data.done||false; node.note=data.note||''; node.id=data.id; node.children=data.children.map(c=>deserializeTree(c,node)); return node; }
+function countSerialized(n){
+  if(!n) return 0;
+  return 1 + (n.children||[]).reduce((a,c)=>a+countSerialized(c),0);
+}
+
+function mergeSaves(a, b){
+  const out = Object.assign({}, a||{});
+  Object.keys(b||{}).forEach(k=>{
+    if(!out[k]) { out[k]=b[k]; return; }
+    if(countSerialized(b[k]&&b[k].tree) > countSerialized(out[k]&&out[k].tree)) out[k]=b[k];
+  });
+  return out;
+}
+
+function persistSession(){
+  if(!storageReady || !root || !cur) return;
+  const data = { savedAt: Date.now(), tree: serializeTree(root), curId: cur.id, nodeId, sidesSwapped: !!sidesSwapped };
+  try { localStorage.setItem('mg_session', JSON.stringify(data)); } catch(e) {}
+  idbPut('session', data);
+}
+
+function persistSessionSoon(){
+  if(!storageReady) return;
+  if(persistTimer) clearTimeout(persistTimer);
+  persistTimer = setTimeout(persistSession, 50);
+}
+
+function restoreSession(){
+  try {
+    const raw = localStorage.getItem('mg_session');
+    if(!raw) return false;
+    const s = JSON.parse(raw);
+    if(!s || !s.tree) return false;
+    nodeId = 0;
+    root = deserializeTree(s.tree, null);
+    function findNode(node, tid){ if(node.id===tid) return node; for(let c of node.children){ let f=findNode(c,tid); if(f) return f; } return null; }
+    cur = findNode(root, s.curId) || root;
+    promotePath(cur);
+    sidesSwapped = !!s.sidesSwapped;
+    if(typeof s.nodeId === 'number') nodeId = Math.max(nodeId, s.nodeId);
+    const win = document.getElementById('win-overlay');
+    if(win) win.classList.remove('show');
+    render();
+    return true;
+  } catch { return false; }
+}
+
+function exportBackup(){
+  persistSession();
+  const payload = {
+    v: 1,
+    exportedAt: new Date().toISOString(),
+    saves: getSaves(),
+    session: (()=>{ try{return JSON.parse(localStorage.getItem('mg_session')||'null');}catch{return null;} })()
+  };
+  const blob = new Blob([JSON.stringify(payload)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mangala-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 500);
+}
+
+function importBackupFile(input){
+  const file = input.files && input.files[0];
+  input.value = '';
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try {
+      const data = JSON.parse(reader.result);
+      const incoming = (data && data.saves) ? data.saves : data;
+      if(!incoming || typeof incoming !== 'object') return;
+      persistSavesObj(mergeSaves(getSaves(), incoming));
+      if(data && data.session && data.session.tree){
+        try { localStorage.setItem('mg_session', JSON.stringify(data.session)); } catch(e) {}
+        idbPut('session', data.session);
+        restoreSession();
+      }
+      renderStats();
+      closePanel();
+    } catch(e) {}
+  };
+  reader.readAsText(file);
+}
+
+async function hydratePersistence(){
+  try { if(navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch(e) {}
+  try {
+    const idbSaves = await idbGet('saves');
+    persistSavesObj(mergeSaves(getSaves(), idbSaves && typeof idbSaves === 'object' ? idbSaves : {}));
+  } catch(e) {}
+  try {
+    const idbSess = await idbGet('session');
+    const lsRaw = localStorage.getItem('mg_session');
+    let lsSess = null;
+    try { lsSess = lsRaw ? JSON.parse(lsRaw) : null; } catch(e) {}
+    const pick = (!lsSess && idbSess) ? idbSess
+      : (idbSess && lsSess && (idbSess.savedAt||0) > (lsSess.savedAt||0)) ? idbSess
+      : lsSess;
+    if(pick){
+      try { localStorage.setItem('mg_session', JSON.stringify(pick)); } catch(e) {}
+      idbPut('session', pick);
+    }
+  } catch(e) {}
+}
+
+function serializeTree(node){ return { id:node.id, board:node.board, player:node.player, move:node.move, extra:node.extra, cap:node.cap, lastPos:node.lastPos, done:node.done, note:node.note, lastVisitedId:node.lastVisited?node.lastVisited.id:null, children:node.children.map(c=>serializeTree(c)) }; }
+
+function deserializeTree(data, parent){ let node=mkNode(data.board,data.player,parent,data.move,data.extra,data.cap); node.lastPos=data.lastPos; node.done=data.done||false; node.note=data.note||''; node.id=data.id; node.children=(data.children||[]).map(c=>deserializeTree(c,node)); if(data.lastVisitedId!=null) node.lastVisited=node.children.find(c=>c.id===data.lastVisitedId)||null; return node; }
 
 function doSave(){
   let name=document.getElementById('save-name').value.trim()||`Game ${new Date().toLocaleDateString()+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
   let note=document.getElementById('save-note').value.trim();
   let saves=getSaves(); let id=Date.now();
   saves[id]={ id, name, note, score:`${cur.board[6]}-${cur.board[13]}`, date:new Date().toLocaleDateString()+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), startPlayer:root.player, curId:cur.id, tree:serializeTree(root) };
-  localStorage.setItem('mg_saves',JSON.stringify(saves));
+  persistSavesObj(saves);
   document.getElementById('save-name').value=''; document.getElementById('save-note').value='';
   renderStats(); closePanel();
 }
 
 function loadSave(id){
+  haltPlay();
   frozenTreeRows=null; let s=getSaves()[id]; if(!s)return;
   nodeId=0; root=deserializeTree(s.tree,null);
   function findNode(node,tid){ if(node.id===tid)return node; for(let c of node.children){let f=findNode(c,tid);if(f)return f;} return null; }
   cur=findNode(root,s.curId)||root;
+  promotePath(cur);
   render(); closePanel();
 }
 
-function delSave(id){ let s=getSaves(); delete s[id]; localStorage.setItem('mg_saves',JSON.stringify(s)); openSavesList(); renderStats(); }
+function delSave(id){ let s=getSaves(); delete s[id]; persistSavesObj(s); openSavesList(); renderStats(); }
 
 function openSavesList(){
   let saves=getSaves(); let items=Object.values(saves).reverse();
   let body=document.getElementById('saves-list-body'); body.innerHTML='';
   if(!items.length){ body.innerHTML='<div style="font-size:12px;color:var(--muted);padding:8px 0">No saved positions</div>'; return; }
-  items.forEach(s=>{ let d=document.createElement('div'); d.className='saved-card'; d.innerHTML=`<div style="flex:1"><div class="saved-card-name">${s.name}</div><div class="saved-card-meta">${s.score} · ${s.date}</div>${s.note?`<div style="font-size:10px;color:var(--muted);margin-top:2px">${s.note}</div>`:''}</div><div class="saved-card-btns"><button class="pill-btn load" onclick="loadSave(${s.id})">LOAD</button><button class="pill-btn del" onclick="delSave(${s.id})">✗</button></div>`; body.appendChild(d); });
+  items.forEach(s=>{ let d=document.createElement('div'); d.className='saved-card'; d.innerHTML=`<div style="flex:1"><div class="saved-card-name">${s.name}</div><div class="saved-card-meta">${s.score} · ${s.date}</div>${s.note?`<div style="font-size:10px;color:var(--muted);margin-top:2px">${s.note}</div>`:''}</div><div class="saved-card-btns"><button class="pill-btn share" onclick="shareSave(${s.id})">↗</button><button class="pill-btn load" onclick="loadSave(${s.id})">LOAD</button><button class="pill-btn del" onclick="delSave(${s.id})">✗</button></div>`; body.appendChild(d); });
 }
 
 // ============================================================
@@ -926,11 +1320,20 @@ function showWin(b){
   document.getElementById('win-overlay').classList.add('show');
 }
 function closeWin(){ document.getElementById('win-overlay').classList.remove('show'); }
-function saveFromWin(){ let name=document.getElementById('win-save-name').value.trim(); let result=document.getElementById('win-score').textContent; if(!name)name=`Game ${new Date().toLocaleDateString()} ${result}`; let saves=getSaves(); let id=Date.now(); saves[id]={id,name,note:result,score:`${cur.board[6]}-${cur.board[13]}`,date:new Date().toLocaleDateString()+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),startPlayer:root.player,curId:cur.id,tree:serializeTree(root)}; localStorage.setItem('mg_saves',JSON.stringify(saves)); document.getElementById('win-save-name').value=''; closeWin(); }
+function saveFromWin(){ let name=document.getElementById('win-save-name').value.trim(); let result=document.getElementById('win-score').textContent; if(!name)name=`Game ${new Date().toLocaleDateString()} ${result}`; let saves=getSaves(); let id=Date.now(); saves[id]={id,name,note:result,score:`${cur.board[6]}-${cur.board[13]}`,date:new Date().toLocaleDateString()+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),startPlayer:root.player,curId:cur.id,tree:serializeTree(root)}; persistSavesObj(saves); document.getElementById('win-save-name').value=''; closeWin(); }
 
 document.querySelectorAll('.panel').forEach(p=>{ p.addEventListener('touchstart',e=>touchY=e.touches[0].clientY,{passive:true}); p.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-touchY>60)closePanel();},{passive:true}); });
 
-newGame();
+window.addEventListener('pagehide', persistSession);
+window.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') persistSession(); });
+
+hydratePersistence().then(()=>{
+  storageReady = true;
+  if(!restoreSession()) newGame();
+}).catch(()=>{
+  storageReady = true;
+  if(!root) newGame();
+});
 
 </script>
 
@@ -938,7 +1341,7 @@ newGame();
 let dtScale = 1;
 const DT_SCALES = [0.5,0.6,0.7,0.8,0.9,1.0,1.15,1.3,1.5,1.75,2.0];
 
-function openDebutTree(){ let ov=document.getElementById('dt-overlay'); ov.style.display='flex'; document.getElementById('dt-pit-select').style.display='flex'; document.getElementById('dt-root-select').style.display='none'; document.getElementById('dt-table-area').style.display='none'; dtScale=1; document.getElementById('dt-zoom-lbl').textContent='100%'; }
+function openDebutTree(){ haltPlay(); let ov=document.getElementById('dt-overlay'); ov.style.display='flex'; document.getElementById('dt-pit-select').style.display='flex'; document.getElementById('dt-root-select').style.display='none'; document.getElementById('dt-table-area').style.display='none'; dtScale=1; document.getElementById('dt-zoom-lbl').textContent='100%'; }
 function closeDebutTree(){ document.getElementById('dt-overlay').style.display='none'; document.getElementById('dt-title').textContent='DEBUT TREE'; document.getElementById('dt-title').style.color='var(--gold)'; }
 
 let dtMode = 'main';
@@ -972,16 +1375,10 @@ function dtBuildRoot(pit) {
   dtMode = 'root';
   document.getElementById('dt-root-select').style.display = 'none';
   document.getElementById('dt-table-area').style.display = 'block';
-  let saves = getSaves();
   let table = document.getElementById('dt-table');
   table.innerHTML = '';
 
-  let games = Object.values(saves).filter(g => {
-    if (!g.tree || !g.tree.children || g.tree.children.length === 0) return false;
-    let sp = g.startPlayer !== undefined ? g.startPlayer : g.tree.player;
-    let firstMove = g.tree.children[0].move;
-    return sp === 0 ? firstMove === pit - 1 : firstMove === pit + 6;
-  });
+  let games = dtAllGames().filter(g => dtFirstMoveMatches(g, pit));
 
   if (!games.length) {
     let tr = document.createElement('tr'), td = document.createElement('td');
@@ -994,7 +1391,7 @@ function dtBuildRoot(pit) {
   let seenKeys = new Set();
   games.forEach(g => {
     let sp = g.startPlayer !== undefined ? g.startPlayer : (g.tree ? g.tree.player : 0);
-    let path = dtFlatten(dtDeserTree(g.tree, null), null);
+    let path = dtFlatten(dtDeserTree(g.tree, null), g.curId);
     if (!path || !path.length) return;
     let key = path.map(n => dtLabelStr(n, sp)).join(',');
     if (seenKeys.has(key)) return;
@@ -1019,14 +1416,7 @@ function dtBuildRoot(pit) {
       (isP2 ? 'background:rgba(150,150,170,0.10);color:#aaa;' : 'background:rgba(238,238,245,0.12);color:var(--text);');
     if (node.cap > 0) tok.style.textDecoration = 'underline';
     tok.textContent = lbl;
-    tok.onclick = () => {
-      let bstr = JSON.stringify(node.board);
-      function findB(nd) { if(JSON.stringify(nd.board)===bstr)return nd; for(let ch of nd.children){let f=findB(ch);if(f)return f;} return null; }
-      let live = findB(root);
-      if (live) { cur=live; render(); closeDebutTree(); return; }
-      loadSave(saveId);
-      setTimeout(()=>{ let found=findB(root); if(found){cur=found;render();} closeDebutTree(); }, 80);
-    };
+    tok.onclick = () => dtJumpToNode(node, saveId);
     return tok;
   }
 
@@ -1308,11 +1698,63 @@ function dtBuildRoot(pit) {
 
 function dtZoom(dir){ let idx=DT_SCALES.findIndex(s=>Math.abs(s-dtScale)<0.01); if(idx===-1)idx=5; idx=Math.max(0,Math.min(DT_SCALES.length-1,idx+dir)); dtScale=DT_SCALES[idx]; let tbl=document.getElementById('dt-table'); if(tbl){let inner=tbl.querySelector('td > div');let el=inner||tbl;el.style.transformOrigin='top left';el.style.transform=`scale(${dtScale})`;} document.getElementById('dt-zoom-lbl').textContent=Math.round(dtScale*100)+'%'; }
 
-function dtDeserTree(data,parent){ let node={id:data.id,board:data.board,player:data.player,move:data.move,extra:data.extra,cap:data.cap,lastPos:data.lastPos,parent:parent,children:[]}; node.children=(data.children||[]).map(c=>dtDeserTree(c,node)); return node; }
+function dtDeserTree(data,parent){
+  let node={id:data.id,board:data.board,player:data.player,move:data.move,extra:data.extra,cap:data.cap,lastPos:data.lastPos,parent:parent,children:[]};
+  node.children=(data.children||[]).map(c=>dtDeserTree(c,node));
+  if(data.lastVisitedId!=null) node.lastVisited=node.children.find(c=>c.id===data.lastVisitedId)||null;
+  return node;
+}
 
-// Разворачиваем дерево в путь до curId (или до конца главной линии)
+function dtPickNext(n){
+  if(!n || !n.children || !n.children.length) return null;
+  if(n.lastVisited && n.children.includes(n.lastVisited)) return n.lastVisited;
+  return n.children[0];
+}
+
+function dtAllGames(){
+  let games = Object.values(getSaves());
+  if(root && root.children && root.children.length && cur){
+    games.unshift({
+      id: '__live__',
+      name: 'ТЕКУЩИЙ',
+      note: '',
+      tree: serializeTree(root),
+      curId: cur.id,
+      startPlayer: root.player
+    });
+  }
+  return games;
+}
+
+function dtMainPath(g){
+  let tree = dtDeserTree(g.tree, null);
+  let path = dtFlatten(tree, g.curId);
+  return { tree, path, firstMove: path && path[0] ? path[0].move : null };
+}
+
+function dtFirstMoveMatches(g, pit){
+  if(!g.tree || !g.tree.children || !g.tree.children.length) return false;
+  let { firstMove } = dtMainPath(g);
+  if(firstMove==null) return false;
+  let sp = g.startPlayer !== undefined ? g.startPlayer : g.tree.player;
+  return sp === 0 ? firstMove === pit - 1 : firstMove === pit + 6;
+}
+
+function dtJumpToNode(node, saveId){
+  let bstr = JSON.stringify(node.board);
+  function findB(nd){ if(JSON.stringify(nd.board)===bstr)return nd; for(let ch of nd.children){ let f=findB(ch); if(f) return f; } return null; }
+  let live = findB(root);
+  if(live){ cur=live; promotePath(cur); render(); closeDebutTree(); return; }
+  if(saveId && saveId !== '__live__'){
+    loadSave(saveId);
+    setTimeout(()=>{ let found=findB(root); if(found){ cur=found; promotePath(cur); render(); } closeDebutTree(); }, 80);
+    return;
+  }
+  closeDebutTree();
+}
+
+// Разворачиваем дерево в путь до curId, дальше — lastVisited / главная линия
 function dtFlatten(tree, curId) {
-  // Ищем путь до curId
   function findPath(node, tid, path) {
     let p = [...path, node];
     if (node.id === tid) return p;
@@ -1320,12 +1762,16 @@ function dtFlatten(tree, curId) {
     return null;
   }
   if (curId !== undefined && curId !== null) {
-    let path = findPath(tree, curId, []);
-    if (path && path.length > 1) return path.slice(1); // убираем root
+    let found = findPath(tree, curId, []);
+    if (found && found.length > 1) {
+      let flat = found.slice(1);
+      let n = dtPickNext(found[found.length - 1]);
+      while (n) { flat.push(n); n = dtPickNext(n); }
+      return flat;
+    }
   }
-  // Главная линия
-  let flat = [], n = tree.children && tree.children.length > 0 ? tree.children[0] : null;
-  while (n) { flat.push(n); n = n.children && n.children.length > 0 ? n.children[0] : null; }
+  let flat = [], n = dtPickNext(tree);
+  while (n) { flat.push(n); n = dtPickNext(n); }
   return flat;
 }
 // sp = startPlayer (кто начал: 0 или 1)
@@ -1338,7 +1784,7 @@ function dtLabelStr(node, sp) {
   if(node.lastPos===6||node.lastPos===13){to='M';}
   else if(node.lastPos>=7&&node.lastPos<=12){to=node.lastPos-6;}
   else{to=node.lastPos+1;}
-  return`${from}→${to}`;
+  return `${from}${to}`;
 }
 
 // 0 = первый игрок (тот кто начал), 1 = второй
@@ -1364,20 +1810,89 @@ function dtGroupRows(path, sp) {
   return rows;
 }
 
+function liveGameAsSave(){
+  if(!root || !cur) return null;
+  let b = cur.board || root.board;
+  return {
+    id: '__live__',
+    name: 'ТЕКУЩИЙ',
+    note: cur.note || '',
+    score: b[6] + ' — ' + b[13],
+    tree: serializeTree(root),
+    curId: cur.id,
+    startPlayer: root.player
+  };
+}
+
+function formatDebutTable(g){
+  if(!g || !g.tree) return '';
+  let { path } = dtMainPath(g);
+  if(!path || !path.length) return '';
+  let sp = g.startPlayer !== undefined ? g.startPlayer : (g.tree ? g.tree.player : 0);
+  let rows = dtGroupRows(path, sp);
+  if(!rows.length) return '';
+  let p1s = rows.map(r => r.p1.map(n => dtLabelStr(n, sp)).filter(Boolean).join(' '));
+  let p2s = rows.map(r => r.p2.map(n => dtLabelStr(n, sp)).filter(Boolean).join(' '));
+  let w1 = Math.max(2, ...p1s.map(s => s.length));
+  let last = path[path.length-1];
+  let score = last && last.board ? (last.board[6] + ' — ' + last.board[13]) : (g.score || '');
+  let lines = [];
+  if(g.name) lines.push(g.name + (score ? '    ' + score : ''));
+  else if(score) lines.push(score);
+  if(g.note) lines.push(g.note);
+  lines.push('');
+  lines.push('#   ' + 'P1'.padEnd(w1) + '  P2');
+  rows.forEach((row, i) => {
+    lines.push((row.rowNum + '.').padEnd(4) + (p1s[i]||'').padEnd(w1) + '  ' + (p2s[i]||''));
+  });
+  return lines.join('\n');
+}
+
+function showShareToast(msg){
+  let el = document.createElement('div');
+  el.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);color:#fff;font-family:Syne,sans-serif;font-size:14px;font-weight:800;padding:14px 22px;border-radius:12px;z-index:999;pointer-events:none';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 1400);
+}
+
+function copyShareText(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(text).then(()=>showShareToast('Скопировано')).catch(()=>{
+      let ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); showShareToast('Скопировано'); } catch(e) {}
+      ta.remove();
+    });
+  }
+  let ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); showShareToast('Скопировано'); } catch(e) {}
+  ta.remove();
+}
+
+function shareDebut(g){
+  if(!g) g = liveGameAsSave();
+  let text = formatDebutTable(g);
+  if(!text){ showShareToast('Нет ходов'); return; }
+  if(navigator.share){
+    navigator.share({ text }).catch(e=>{
+      if(e && e.name === 'AbortError') return;
+      copyShareText(text);
+    });
+    return;
+  }
+  copyShareText(text);
+}
+
+function shareSave(id){
+  let s = getSaves()[id];
+  if(s) shareDebut(s);
+}
+
 function dtSelectPit(pit) {
   dtMode = 'main';
   document.getElementById('dt-pit-select').style.display = 'none';
   document.getElementById('dt-table-area').style.display = 'block';
-  let saves = getSaves();
-
-  // Фильтр: первый ход первого игрока = pit
-  let games = Object.values(saves).filter(g => {
-    if (!g.tree || !g.tree.children || g.tree.children.length === 0) return false;
-    let sp = g.startPlayer !== undefined ? g.startPlayer : g.tree.player;
-    let firstMove = g.tree.children[0].move;
-    if (sp === 0) return firstMove === pit - 1;
-    else return firstMove === pit + 6;
-  });
+  let games = dtAllGames().filter(g => dtFirstMoveMatches(g, pit));
 
   let table = document.getElementById('dt-table'); table.innerHTML = '';
   if (games.length === 0) {
@@ -1409,7 +1924,7 @@ function dtSelectPit(pit) {
   games.forEach(g => {
     let sp = g.startPlayer !== undefined ? g.startPlayer : (g.tree ? g.tree.player : 0);
     let dtRoot = dtDeserTree(g.tree, null);
-    let path = dtFlatten(dtRoot, null);
+    let path = dtFlatten(dtRoot, g.curId);
     if (!path || path.length === 0) return;
 
     let rows = dtGroupRows(path, sp);
@@ -1417,7 +1932,15 @@ function dtSelectPit(pit) {
 
     let section = document.createElement('div'); section.className = 'dt-section';
     let nameEl = document.createElement('div'); nameEl.className = 'dt-game-name';
-    nameEl.textContent = (g.name || 'Игра') + (g.note ? '  ' + g.note : '');
+    nameEl.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px';
+    let nameTxt = document.createElement('span');
+    nameTxt.textContent = (g.name || 'Игра') + (g.note ? '  ' + g.note : '');
+    let shareBtn = document.createElement('button');
+    shareBtn.className = 'pill-btn share';
+    shareBtn.textContent = '↗';
+    shareBtn.onclick = (e)=>{ e.stopPropagation(); shareDebut(g); };
+    nameEl.appendChild(nameTxt);
+    nameEl.appendChild(shareBtn);
     section.appendChild(nameEl);
 
     let tbl = document.createElement('table'); tbl.className = 'dt-table2';
@@ -1434,22 +1957,7 @@ function dtSelectPit(pit) {
         let lbl = dtLabelStr(n, sp); if (!lbl) return;
         let tok = document.createElement('span'); tok.className = 'dt-tok' + (n.cap > 0 ? ' cap' : '');
         tok.textContent = lbl;
-        tok.onclick = () => {
-          function findByBoard(node, bstr) {
-            if (JSON.stringify(node.board) === bstr) return node;
-            for (let c of node.children) { let f = findByBoard(c, bstr); if (f) return f; }
-            return null;
-          }
-          let bstr = JSON.stringify(n.board);
-          let live = findByBoard(root, bstr);
-          if (live) { cur = live; render(); closeDebutTree(); return; }
-          loadSave(g.id);
-          setTimeout(() => {
-            let found = findByBoard(root, bstr);
-            if (found) { cur = found; render(); }
-            closeDebutTree();
-          }, 80);
-        };
+        tok.onclick = () => dtJumpToNode(n, g.id);
         tdP1.appendChild(tok);
       });
 
@@ -1457,22 +1965,7 @@ function dtSelectPit(pit) {
         let lbl = dtLabelStr(n, sp); if (!lbl) return;
         let tok = document.createElement('span'); tok.className = 'dt-tok p1' + (n.cap > 0 ? ' cap' : '');
         tok.textContent = lbl;
-        tok.onclick = () => {
-          function findByBoard(node, bstr) {
-            if (JSON.stringify(node.board) === bstr) return node;
-            for (let c of node.children) { let f = findByBoard(c, bstr); if (f) return f; }
-            return null;
-          }
-          let bstr = JSON.stringify(n.board);
-          let live = findByBoard(root, bstr);
-          if (live) { cur = live; render(); closeDebutTree(); return; }
-          loadSave(g.id);
-          setTimeout(() => {
-            let found = findByBoard(root, bstr);
-            if (found) { cur = found; render(); }
-            closeDebutTree();
-          }, 80);
-        };
+        tok.onclick = () => dtJumpToNode(n, g.id);
         tdP2.appendChild(tok);
       });
 
